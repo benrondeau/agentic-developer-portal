@@ -5,9 +5,9 @@
 **Wireframes + UX Explanation:** https://github.com/benrondeau/agentic-developer-portal/tree/main/wireframes
 
 
-## UX overview
+## UX Overview
 
-The user interface is a fixed three-pane layout (min-width 1024 px).
+The user interface is comprised of the following elements:
 
 
 ### NavBar
@@ -88,7 +88,6 @@ CSS-variable-driven light and dark themes via `data-theme="light|dark"` on `<htm
 - `Enter` — launch the resolved or highlighted command.
 - `Esc` — close popovers, drawers, modals.
 
----
 
 ## Technical info
 

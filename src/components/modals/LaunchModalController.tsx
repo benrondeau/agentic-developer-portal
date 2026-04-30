@@ -1,39 +1,57 @@
-import { useNavigate, useParams, useSearchParams } from 'react-router'
+import { useParams, useSearchParams } from 'react-router'
 import { AgentConfirmModal } from './AgentConfirmModal.tsx'
 import { getTaskById } from '../../data/tasks.ts'
 import { getRepoBySlug } from '../../data/repos.ts'
 import { useAgentRuntime } from '../../hooks/useAgentRuntime.ts'
 
 /**
- * Reads `?launch=<taskId>` from the URL and renders the confirmation modal
- * for that task on the current repo. Cancel clears the param. Confirm calls
- * runtime.launch and clears the param.
+ * Renders the agent-confirmation modal when either `?launch=<taskId>` (from a
+ * task picker) or `?retry=<taskId>` (from the agent toolbar's re-run button)
+ * is present. On confirm, launches the agent and points `?run=` at the new
+ * run so it becomes the active tab. Other params (notably `?branch=`) are
+ * preserved.
  */
 export function LaunchModalController() {
   const [searchParams, setSearchParams] = useSearchParams()
   const { repoSlug } = useParams<{ repoSlug: string }>()
-  const navigate = useNavigate()
   const { launch } = useAgentRuntime()
 
   const launchId = searchParams.get('launch')
-  if (!launchId || !repoSlug) return null
+  const retryId = searchParams.get('retry')
+  const taskId = launchId ?? retryId
+  if (!taskId || !repoSlug) return null
 
-  const task = getTaskById(launchId)
+  const task = getTaskById(taskId)
   const repo = getRepoBySlug(repoSlug)
   if (!task || !repo) return null
 
+  const mode = retryId ? 'retry' : 'launch'
+
   const clear = () => {
-    const next = new URLSearchParams(searchParams)
-    next.delete('launch')
-    setSearchParams(next, { replace: true })
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev)
+        next.delete('launch')
+        next.delete('retry')
+        return next
+      },
+      { replace: true },
+    )
   }
 
   const confirm = () => {
-    launch(task.id, repo.slug)
-    clear()
-    // ensure we stay on the repo route so the new run shows up in the panel.
-    navigate(`/repo/${repo.slug}`, { replace: true })
+    const newRunId = launch(task.id, repo.slug)
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev)
+        next.delete('launch')
+        next.delete('retry')
+        if (newRunId) next.set('run', newRunId)
+        return next
+      },
+      { replace: true },
+    )
   }
 
-  return <AgentConfirmModal task={task} repo={repo} onCancel={clear} onConfirm={confirm} />
+  return <AgentConfirmModal task={task} repo={repo} mode={mode} onCancel={clear} onConfirm={confirm} />
 }

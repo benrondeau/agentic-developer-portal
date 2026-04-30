@@ -1,9 +1,11 @@
+import { useSearchParams } from 'react-router'
 import { Button } from '../primitives/Button.tsx'
 import type { AgentRun } from '../../types/agent.ts'
 import { useAgentRuntime } from '../../hooks/useAgentRuntime.ts'
 
 export function AgentToolbar({ run }: { run: AgentRun }) {
   const { abort, dismiss } = useAgentRuntime()
+  const [, setSearchParams] = useSearchParams()
 
   const copyLog = async () => {
     try {
@@ -11,6 +13,14 @@ export function AgentToolbar({ run }: { run: AgentRun }) {
     } catch {
       /* swallow — no clipboard in test env */
     }
+  }
+
+  const openRetryConfirm = () => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev)
+      next.set('retry', run.taskId)
+      return next
+    })
   }
 
   return (
@@ -21,7 +31,9 @@ export function AgentToolbar({ run }: { run: AgentRun }) {
       {run.status === 'done' && run.result?.kind === 'pr' && (
         <Button label={`view PR #${run.result.number}`} small icon="external" />
       )}
-      {run.status === 'error' && <Button label="re-run agent" variant="primary" small icon="refresh" />}
+      {run.status === 'error' && (
+        <Button label="re-run agent" variant="primary" small icon="refresh" onClick={openRetryConfirm} />
+      )}
       {run.status === 'error' && <Button label="edit & retry" small icon="edit" />}
       <Button label="copy log" small icon="copy" onClick={copyLog} />
       {run.status !== 'running' && <Button label="dismiss" small icon="close" onClick={() => dismiss(run.id)} />}

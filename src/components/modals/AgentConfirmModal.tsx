@@ -15,15 +15,22 @@ const colorVar: Record<TaskColorToken, string> = {
 type AgentConfirmModalProps = {
   task: Task
   repo: Repo
+  /** 'retry' tweaks the wording to indicate this is a re-run of a prior agent run. */
+  mode?: 'launch' | 'retry'
   onCancel: () => void
   onConfirm: () => void
 }
 
-export function AgentConfirmModal({ task, repo, onCancel, onConfirm }: AgentConfirmModalProps) {
+export function AgentConfirmModal({ task, repo, mode = 'launch', onCancel, onConfirm }: AgentConfirmModalProps) {
   const inTokens = Math.round(task.estTokens * 0.74)
   const outTokens = task.estTokens - inTokens
   const durationLabel =
     task.estDurationSec >= 60 ? `~${Math.round(task.estDurationSec / 60)} min` : `~${task.estDurationSec}s`
+  const isRetry = mode === 'retry'
+  const titleVerb = isRetry ? 'Re-run' : 'Run'
+  const confirmLabel = isRetry
+    ? `Run again · ${formatCost(task.estCost)}`
+    : `Run agent · ${formatCost(task.estCost)}`
 
   return (
     <ModalShell onClose={onCancel}>
@@ -32,7 +39,7 @@ export function AgentConfirmModal({ task, repo, onCancel, onConfirm }: AgentConf
           <Icon name={task.icon} size={14} color={colorVar[task.color]} />
         </span>
         <span className="font-mono text-[15px] font-semibold text-text">
-          Run {task.label.toLowerCase()} on {repo.name}?
+          {titleVerb} {task.label.toLowerCase()} on {repo.name}?
         </span>
       </div>
 
@@ -76,8 +83,8 @@ export function AgentConfirmModal({ task, repo, onCancel, onConfirm }: AgentConf
           onClick={onConfirm}
           className="inline-flex cursor-pointer items-center gap-1.5 rounded-[4px] border-[1.5px] border-accent bg-accent px-4 py-1.5 font-mono text-[14px] font-semibold text-white hover:opacity-90"
         >
-          <Icon name="play" size={11} color="white" />
-          Run agent · {formatCost(task.estCost)}
+          <Icon name={isRetry ? 'refresh' : 'play'} size={11} color="white" />
+          {confirmLabel}
         </button>
       </div>
     </ModalShell>

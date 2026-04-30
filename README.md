@@ -42,7 +42,8 @@ Launched via `?launch=<taskId>` (from any agent trigger) or `?retry=<taskId>` (f
 
 The right pane shows live and recent runs for the **current repo** as tabs.
 
-- **Tab bar** — one tab per visible run, with a status dot (running / done / error / aborted).
+- **Tab bar** — one tab per visible run, with a status dot (running / done / error / aborted). The active tab auto-scrolls into view when set externally (e.g. from the global drawer).
+- **Stale-run banner** — if the URL points at a run that's no longer in this repo (dismissed, deep-link, wrong slug), a banner explains why the latest run is showing instead, with a one-click dismiss.
 - **View modes** — toggle between split (steps + log), steps only, or log only.
 - **Step list** — checklist of agent steps with current status and details; running steps show a pulse.
 - **Live log (Terminal)** — animated terminal output. Lines are added incrementally as the run progresses, with a blinking "working…" line at the tail while running.
@@ -50,13 +51,14 @@ The right pane shows live and recent runs for the **current repo** as tabs.
 - **Toolbar** — context-sensitive buttons:
   - `running` → **abort** (immediate, marks the run aborted)
   - `done` with a PR result → **view PR #N**
+  - `done` with a report result → **view report** (opens the report viewer modal)
   - `error` → **re-run agent** (opens the confirmation modal in retry mode), **edit & retry**
-  - all states → **copy log**
+  - all states → **copy log** (button flips to "copied!" with a check icon for ~1.5 s on success)
   - non-running → **dismiss** (hides the run from the tab bar but preserves history)
 
 ### Global agents drawer
 
-Right-side overlay opened from the NavBar's agent counter. Lists every active and recently-finished run grouped by repo, with a live progress bar and elapsed timer per row. Clicking any row closes the drawer and navigates to that repo with the clicked agent pre-selected as the active tab — implemented by setting `?run=<id>` on the destination URL.
+Right-side overlay opened from the NavBar's agent counter. Lists every active and recently-finished run grouped by repo, with a live progress bar and elapsed timer per row. A row of filter chips at the top (`all` / `running` / `done` / `failed`) narrows the list, with live counts shown next to each chip. Clicking any row closes the drawer and navigates to that repo with the clicked agent pre-selected as the active tab — implemented by setting `?run=<id>` on the destination URL.
 
 ### Org drawer
 
@@ -72,8 +74,11 @@ State that should survive reload, deep-link, or the back button lives in URL que
 | `?run=<id>`      | Currently focused run in the agent panel (set by the drawer or by tab clicks). |
 | `?launch=<task>` | Show the launch-confirmation modal for `task`.                           |
 | `?retry=<task>`  | Show the same modal in retry mode (from the agent toolbar).              |
+| `?report=<id>`   | Open the report-artifact viewer for a completed run.                     |
 | `?drawer=agents` | Open the global agents drawer.                                           |
 | `?drawer=org`    | Open the org-switcher drawer.                                            |
+
+All param updates go through a small `useUrlParam(key)` hook ([src/hooks/useUrlParam.ts](src/hooks/useUrlParam.ts)) that reads, writes, and deletes a single param while preserving every other one — a single place to enforce that invariant.
 
 Updates to one param always preserve the others (e.g. switching tabs while on `?branch=develop` keeps the branch).
 
@@ -119,12 +124,12 @@ src/
 │   ├── insights/                 # center pane sections
 │   ├── agents/                   # right pane (tabs, steps, terminal, toolbar)
 │   ├── drawers/                  # GlobalAgentsDrawer, OrgDrawer, DrawerShell
-│   ├── modals/                   # AgentConfirmModal, LaunchModalController
+│   ├── modals/                   # AgentConfirmModal, LaunchModalController, ReportModalController
 │   └── primitives/               # Button, Badge, Icon, ProgressBar, etc.
 ├── state/
 │   ├── ThemeContext.tsx          # theme provider + persistence
 │   └── AgentRuntimeContext.tsx   # the in-memory agent runtime
-├── hooks/                        # useTheme, useAgentRuntime, useNow
+├── hooks/                        # useTheme, useAgentRuntime, useNow, useUrlParam
 ├── data/
 │   ├── repos.ts                  # repo seed + per-branch view derivation
 │   ├── tasks.ts                  # the 6 agent task definitions
@@ -140,13 +145,13 @@ src/
 
 `AgentRuntimeContext` is the heart of the simulation. It exposes a small reducer-backed store with these actions: `launch`, `abort`, `dismiss`, and an internal `tick`. A `setInterval(250 ms)` dispatches `tick`, and the reducer advances every `running` run via `progressRun(run, now)`, which:
 
-1. Computes a target percent from elapsed time vs. the task's estimated duration.
+1. Computes a target percent from elapsed time vs. the task's estimated duration, plus a small forward jitter (≤ 1.5%) so progress doesn't feel perfectly linear. The result is clamped to be monotonic — pct can only move forward.
 2. Looks up the run's template (`templatesByTaskId[taskId]`) for ordered step definitions and a log script.
 3. Re-derives step statuses from each step's `doneAtPct` threshold (`pending` → `running` → `done`).
 4. Appends any log lines whose `atPct` threshold has now been crossed, plus a blinking `working…` line at the tail.
-5. Resolves to `done` at 100% or to `error` at the template's `failAtPct` (used by the `sec-scan` template to demonstrate failure).
+5. Resolves to `done` at 100% (attaching the template's `successResult` artifact, if any) or to `error` at the template's `failAtPct` (used by the `sec-scan` template to demonstrate failure).
 
-This means a "real-feeling" run is fully deterministic: every step transition, every log line, and the failure are all data, not timers. The UI just renders whatever `progressRun` produces.
+Step transitions, log lines, and the failure outcome are all data, not timers — the only randomness is the per-tick jitter, which can't change the end state. Templates may declare a `successResult` of either `kind: 'pr'` (PR number + title) or `kind: 'report'` (summary + findings); the toolbar surfaces a different button per kind, and the report viewer modal renders the findings list.
 
 ### Per-branch data derivation
 
@@ -168,10 +173,12 @@ This means a "real-feeling" run is fully deterministic: every step transition, e
 
 ```bash
 pnpm install
-pnpm dev          # http://localhost:5173
-pnpm build        # tsc -b && vite build → dist/
-pnpm preview      # serve the production build
-pnpm lint         # eslint
+pnpm dev            # http://localhost:5173
+pnpm build          # tsc -b && vite build → dist/
+pnpm preview        # serve the production build
+pnpm lint           # eslint
+pnpm format         # prettier --write .
+pnpm format:check   # prettier --check .
 ```
 
 Node 20+ recommended.

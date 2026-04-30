@@ -1,6 +1,8 @@
+import { Icon } from '../primitives/Icon.tsx'
 import { ProgressBar } from '../primitives/ProgressBar.tsx'
 import { STATUS_DOT } from './statusDot.ts'
 import type { AgentRun } from '../../types/agent.ts'
+import { getRepoBySlug } from '../../data/repos.ts'
 import { formatCost, formatElapsed, formatTokensK } from '../../utils/format.ts'
 import { useNow } from '../../hooks/useNow.ts'
 import { cn } from '../../utils/cn.ts'
@@ -23,6 +25,15 @@ export function AgentMeta({ run }: { run: AgentRun }) {
   const elapsedSec = Math.max(1, (now - run.startedAt) / 1000)
   const ratePerSec = isLive ? Math.round(usedTokens / elapsedSec) : null
 
+  // Repos are seeded with `name` in `<org>/<repo>` form, so this composes a
+  // plausible GitHub URL for the draft PR. The PR isn't real, so the link is
+  // primarily a visual artifact — clicking opens a new tab that 404s.
+  const repoName = getRepoBySlug(run.repoSlug)?.name
+  const prHref =
+    run.result?.kind === 'pr' && repoName
+      ? `https://github.com/${repoName}/pull/${run.result.number}`
+      : null
+
   return (
     <div className="flex-shrink-0 border-b border-border px-3.5 py-2.5">
       <div className="mb-1.5 flex items-center gap-2">
@@ -30,6 +41,25 @@ export function AgentMeta({ run }: { run: AgentRun }) {
         <span className="font-mono text-[14px] font-medium text-text">{run.label}</span>
         <span className="ml-auto font-mono text-[12px] text-muted">{elapsedLabel}</span>
       </div>
+
+      {run.result?.kind === 'pr' && (
+        <div className="mb-2 flex items-center gap-2 overflow-hidden">
+          <a
+            href={prHref ?? '#'}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex flex-shrink-0 cursor-pointer items-center gap-1.5 rounded-[4px] border-[1.5px] border-border bg-surface-2 px-2.5 py-1 font-mono text-[12px] whitespace-nowrap text-text hover:border-accent"
+          >
+            <Icon name="pr" size={11} color="var(--c-purple)" />
+            view PR #{run.result.number}
+            <Icon name="external" size={9} color="var(--c-muted)" />
+          </a>
+          <span className="min-w-0 overflow-hidden font-mono text-[12px] text-ellipsis whitespace-nowrap text-muted">
+            {run.result.title}
+          </span>
+        </div>
+      )}
+
       <div className="mb-1 flex justify-between font-mono text-[11px] text-muted">
         <span>progress</span>
         <span>{Math.round(run.pct)}%</span>

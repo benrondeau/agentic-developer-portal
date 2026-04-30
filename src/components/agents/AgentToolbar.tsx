@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Button } from '../primitives/Button.tsx'
 import type { AgentRun } from '../../types/agent.ts'
+import { getRepoBySlug } from '../../data/repos.ts'
 import { useAgentRuntime } from '../../hooks/useAgentRuntime.ts'
 import { useUrlParam } from '../../hooks/useUrlParam.ts'
 
@@ -34,13 +35,22 @@ export function AgentToolbar({ run }: { run: AgentRun }) {
   const openRetryConfirm = () => setRetryParam(run.taskId)
   const openReport = () => setReportParam(run.id)
 
+  // The PR isn't real, but we point at a plausible GitHub URL composed from the
+  // repo's `<org>/<repo>` name so the button does something on click.
+  const openPR = () => {
+    if (run.result?.kind !== 'pr') return
+    const repoName = getRepoBySlug(run.repoSlug)?.name
+    if (!repoName) return
+    window.open(`https://github.com/${repoName}/pull/${run.result.number}`, '_blank', 'noopener,noreferrer')
+  }
+
   return (
     <div className="flex flex-shrink-0 flex-wrap gap-2">
       {run.status === 'running' && (
         <Button label="abort" variant="danger" small icon="stop" onClick={() => abort(run.id)} />
       )}
       {run.status === 'done' && run.result?.kind === 'pr' && (
-        <Button label={`view PR #${run.result.number}`} small icon="external" />
+        <Button label={`view PR #${run.result.number}`} small icon="external" onClick={openPR} />
       )}
       {run.status === 'done' && run.result?.kind === 'report' && (
         <Button label="view report" small icon="external" onClick={openReport} />

@@ -1,4 +1,5 @@
 import { ProgressBar } from '../primitives/ProgressBar.tsx'
+import { STATUS_DOT } from './statusDot.ts'
 import type { AgentRun } from '../../types/agent.ts'
 import { formatCost, formatElapsed, formatTokensK } from '../../utils/format.ts'
 import { useNow } from '../../hooks/useNow.ts'
@@ -25,12 +26,7 @@ export function AgentMeta({ run }: { run: AgentRun }) {
   return (
     <div className="flex-shrink-0 border-b border-border px-3.5 py-2.5">
       <div className="mb-1.5 flex items-center gap-2">
-        <span
-          className={cn(
-            'h-2 w-2 flex-shrink-0 rounded-full',
-            isLive ? 'animate-pulse-soft bg-green' : run.status === 'error' ? 'bg-red' : 'bg-muted',
-          )}
-        />
+        <span className={cn('h-2 w-2 flex-shrink-0 rounded-full', STATUS_DOT[run.status])} />
         <span className="font-mono text-[14px] font-medium text-text">{run.label}</span>
         <span className="ml-auto font-mono text-[12px] text-muted">{elapsedLabel}</span>
       </div>

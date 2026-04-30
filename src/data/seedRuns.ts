@@ -205,46 +205,48 @@ export type RecentRun = {
   status: 'done' | 'error'
   elapsed: string
   detail: string
+  /** Task to launch when the row is clicked (opens the retry-confirmation modal). */
+  taskId: string
 }
 
 const recentBackend: RecentRun[] = [
-  { label: 'dep-upgrade-agent', status: 'done', elapsed: '12m ago', detail: '6 deps bumped · PR #214' },
-  { label: 'sec-scan-agent', status: 'error', elapsed: '2h ago', detail: 'failed: timeout on SAST pass' },
-  { label: 'run-tests-agent', status: 'done', elapsed: '3h ago', detail: '148 passed · 2 skipped' },
-  { label: 'pr-create-agent', status: 'done', elapsed: '1d ago', detail: 'PR #208 merged' },
+  { label: 'dep-upgrade-agent', status: 'done', elapsed: '12m ago', detail: '6 deps bumped · PR #214', taskId: 'dep-upgrade' },
+  { label: 'sec-scan-agent', status: 'error', elapsed: '2h ago', detail: 'failed: timeout on SAST pass', taskId: 'sec-scan' },
+  { label: 'run-tests-agent', status: 'done', elapsed: '3h ago', detail: '148 passed · 2 skipped', taskId: 'run-tests' },
+  { label: 'pr-create-agent', status: 'done', elapsed: '1d ago', detail: 'PR #208 merged', taskId: 'create-pr' },
 ]
 
 const recentFrontend: RecentRun[] = [
-  { label: 'run-tests-agent', status: 'done', elapsed: '1h ago', detail: '224 passed · coverage 81%' },
-  { label: 'refactor-agent', status: 'done', elapsed: '8h ago', detail: 'PR #142 opened' },
+  { label: 'run-tests-agent', status: 'done', elapsed: '1h ago', detail: '224 passed · coverage 81%', taskId: 'run-tests' },
+  { label: 'refactor-agent', status: 'done', elapsed: '8h ago', detail: 'PR #142 opened', taskId: 'refactor' },
 ]
 
 const recentDefault: RecentRun[] = [
-  { label: 'run-tests-agent', status: 'done', elapsed: '6h ago', detail: 'all green' },
+  { label: 'run-tests-agent', status: 'done', elapsed: '6h ago', detail: 'all green', taskId: 'run-tests' },
 ]
 
 // Branch-flavored recent runs. Non-default branches replace the per-repo
 // list so the "Recent Agent Runs" section reflects what's been run on this
 // branch specifically.
 const recentDevelop: RecentRun[] = [
-  { label: 'run-tests-agent', status: 'done', elapsed: '8m ago', detail: 'all green on develop' },
-  { label: 'refactor-agent', status: 'done', elapsed: '2h ago', detail: 'cleanup PR #312 opened' },
-  { label: 'dep-upgrade-agent', status: 'error', elapsed: '5h ago', detail: 'failed: lockfile conflict' },
+  { label: 'run-tests-agent', status: 'done', elapsed: '8m ago', detail: 'all green on develop', taskId: 'run-tests' },
+  { label: 'refactor-agent', status: 'done', elapsed: '2h ago', detail: 'cleanup PR #312 opened', taskId: 'refactor' },
+  { label: 'dep-upgrade-agent', status: 'error', elapsed: '5h ago', detail: 'failed: lockfile conflict', taskId: 'dep-upgrade' },
 ]
 
 const recentRelease: RecentRun[] = [
-  { label: 'sec-scan-agent', status: 'done', elapsed: '4h ago', detail: 'no high-severity findings' },
-  { label: 'run-tests-agent', status: 'done', elapsed: '5h ago', detail: 'full regression: green' },
+  { label: 'sec-scan-agent', status: 'done', elapsed: '4h ago', detail: 'no high-severity findings', taskId: 'sec-scan' },
+  { label: 'run-tests-agent', status: 'done', elapsed: '5h ago', detail: 'full regression: green', taskId: 'run-tests' },
 ]
 
 const recentFeat: RecentRun[] = [
-  { label: 'refactor-agent', status: 'done', elapsed: '20m ago', detail: 'iteration #4 · WIP' },
-  { label: 'run-tests-agent', status: 'error', elapsed: '1h ago', detail: '3 new tests failing' },
+  { label: 'refactor-agent', status: 'done', elapsed: '20m ago', detail: 'iteration #4 · WIP', taskId: 'refactor' },
+  { label: 'run-tests-agent', status: 'error', elapsed: '1h ago', detail: '3 new tests failing', taskId: 'run-tests' },
 ]
 
 const recentHotfix: RecentRun[] = [
-  { label: 'sec-scan-agent', status: 'done', elapsed: '3m ago', detail: 'CVE patched · clean scan' },
-  { label: 'run-tests-agent', status: 'done', elapsed: '8m ago', detail: '12 critical-path tests green' },
+  { label: 'sec-scan-agent', status: 'done', elapsed: '3m ago', detail: 'CVE patched · clean scan', taskId: 'sec-scan' },
+  { label: 'run-tests-agent', status: 'done', elapsed: '8m ago', detail: '12 critical-path tests green', taskId: 'run-tests' },
 ]
 
 function recentForBranch(branch: string | undefined): RecentRun[] | null {

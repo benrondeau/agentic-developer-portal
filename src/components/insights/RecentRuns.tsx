@@ -1,10 +1,15 @@
 import type { RecentRun } from '../../data/seedRuns.ts'
+import { useUrlParam } from '../../hooks/useUrlParam.ts'
 import { cn } from '../../utils/cn.ts'
 
-function RecentRunRow({ run }: { run: RecentRun }) {
+function RecentRunRow({ run, onClick }: { run: RecentRun; onClick: () => void }) {
   const isError = run.status === 'error'
   return (
-    <div className="mb-1.5 flex cursor-pointer items-start gap-2.5 rounded-[3px] border border-border bg-surface-2 px-3 py-2.5 hover:border-accent">
+    <button
+      type="button"
+      onClick={onClick}
+      className="mb-1.5 flex w-full cursor-pointer items-start gap-2.5 rounded-[3px] border border-border bg-surface-2 px-3 py-2.5 text-left hover:border-accent"
+    >
       <div
         className={cn(
           'mt-1 h-2 w-2 flex-shrink-0 rounded-full border-[1.5px]',
@@ -22,15 +27,23 @@ function RecentRunRow({ run }: { run: RecentRun }) {
           {run.detail}
         </div>
       </div>
-    </div>
+    </button>
   )
 }
 
 export function RecentRuns({ runs }: { runs: RecentRun[] }) {
+  // Clicking a recent row sets `?retry=<taskId>` which `LaunchModalController`
+  // reads and renders the agent-confirmation modal in retry mode for the same
+  // task on the current repo.
+  const [, setRetryParam] = useUrlParam('retry')
   return (
     <div>
       {runs.map((r) => (
-        <RecentRunRow key={`${r.label}|${r.elapsed}`} run={r} />
+        <RecentRunRow
+          key={`${r.label}|${r.elapsed}`}
+          run={r}
+          onClick={() => setRetryParam(r.taskId)}
+        />
       ))}
     </div>
   )

@@ -13,7 +13,10 @@ export type Repo = {
   languageLabel: string
   fileCount: number
   lastPushLabel: string
+  /** the currently-checked-out branch — also the first entry in `branches`. */
   branch: string
+  /** all branches the user can switch to via the header dropdown. */
+  branches: string[]
   description: string
   stack: string[]
   contributing: string

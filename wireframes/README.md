@@ -2,7 +2,7 @@
 
 Live Demo: https://benrondeau.github.io/agentic-developer-portal/wireframes/unified-wireframe.html
 
-## The User Designed For
+## User Archetype
 
 A software engineer working across multiple repositories who needs to launch and supervise AI agents without leaving their flow. They live in monospaced terminals and IDEs, scan dense information quickly, and distrust UIs that hide what an automated process is actually doing. The portal should feel like a developer tool, not a marketing dashboard.
 
@@ -14,11 +14,11 @@ The dashboard is anchored in a **3-column layout** — repo list (left), repo in
 2. **Spatial memory.** The same panel always lives in the same place, so users build muscle memory for "where do I go to launch a task" vs. "where do I check on progress."
 3. **Mirrors how engineers already work.** It echoes the file-tree / editor / terminal layout of VS Code, JetBrains, and most modern IDEs — a familiar mental model for the audience.
 
-The portal sits at a fixed 1024px design width to match the density a desktop developer expects. We did not optimize for mobile or tablet; this is a workstation tool.
+The portal expects a minimum 1024px device width to match what a developer uses for a desktop monitor. I did not optimize for mobile or tablet; this is a workstation tool.
 
 ## Information Architecture
 
-**Left — Repo list.** A scrollable, searchable list with `⌘K` visual cue, filter chips (All / Active / Mine), and per-repo badges showing live agent activity (`2 running`) or warnings. The active repo gets a left-edge accent bar — a small, scannable signal that costs almost no pixels. Language tags (`[py]`, `[ts]`, `[k8s]`) replace icons because monospaced abbreviations are unambiguous and don't drift in meaning the way emoji do.
+**Left — Repo list.** A scrollable, searchable list with `⌘K` visual cue, filter chips (All / Active / Needs Attention), and per-repo badges showing live agent activity (`2 running`) or warnings. The active repo gets a left-edge accent bar — a small, scannable signal that costs almost no pixels. Language tags (`[py]`, `[ts]`, `[k8s]`) replace icons because monospaced abbreviations are unambiguous and don't drift in meaning the way emoji do.
 
 **Center — Insights + task launcher.** This panel answers "what is this repo and what can I do to it." It opens with at-a-glance stats (open PRs, coverage, CVEs), then a 6-task grid (Create PR, Refactor, Sec Scan, Upgrade Deps, Run Tests, Dep Map), then suggestion cards that proactively surface work the agent has already noticed needs doing. Suggestions are first-class CTAs, not banners — each one is one click from launching the right agent for the problem.
 

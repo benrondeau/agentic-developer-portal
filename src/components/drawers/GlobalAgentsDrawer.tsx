@@ -29,9 +29,9 @@ export function GlobalAgentsDrawer({ onClose }: GlobalAgentsDrawerProps) {
   const runningCount = runs.filter((r) => r.status === 'running').length
   const doneCount = runs.filter((r) => r.status === 'done').length
 
-  const goToRepo = (slug: string) => {
+  const openAgent = (slug: string, runId: string) => {
     onClose()
-    navigate(`/repo/${slug}`)
+    navigate(`/repo/${slug}?run=${runId}`)
   }
 
   return (
@@ -59,7 +59,7 @@ export function GlobalAgentsDrawer({ onClose }: GlobalAgentsDrawerProps) {
               <span className="font-mono text-[14px] font-semibold text-text">{repo.name}</span>
             </div>
             {agents.map((a) => (
-              <GlobalAgentRow key={a.id} agent={a} now={now} onClick={() => goToRepo(repo.slug)} />
+              <GlobalAgentRow key={a.id} agent={a} now={now} onClick={() => openAgent(repo.slug, a.id)} />
             ))}
           </div>
         ))}

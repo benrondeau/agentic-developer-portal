@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useSearchParams } from 'react-router'
 import { Icon } from '../primitives/Icon.tsx'
 import { EmptyPane } from '../primitives/EmptyPane.tsx'
 import { Label } from '../primitives/Label.tsx'
@@ -31,9 +32,10 @@ export function AgentPanel({ repoSlug }: { repoSlug: string }) {
   const { visibleRunsForRepo } = useAgentRuntime()
   const runs = visibleRunsForRepo(repoSlug)
 
-  // userPickedId is the user's most recent tab choice (or null if they haven't picked).
-  // The "effective" active id is derived: their pick if still present, otherwise the latest run.
-  const [userPickedId, setUserPickedId] = useState<string | null>(null)
+  // The active tab is driven by the `?run=<id>` query param so it can be set from
+  // outside (e.g. the global agents drawer). Falls back to the latest run.
+  const [searchParams, setSearchParams] = useSearchParams()
+  const runIdFromUrl = searchParams.get('run')
   const [viewMode, setViewMode] = useState<ViewMode>('split')
 
   if (runs.length === 0) {
@@ -42,8 +44,20 @@ export function AgentPanel({ repoSlug }: { repoSlug: string }) {
     )
   }
 
-  const pickedRun = userPickedId ? runs.find((r) => r.id === userPickedId) : null
+  const pickedRun = runIdFromUrl ? runs.find((r) => r.id === runIdFromUrl) : null
   const active = pickedRun ?? runs[runs.length - 1]
+
+  const handleSelectTab = (runId: string) => {
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev)
+        next.set('run', runId)
+        return next
+      },
+      { replace: true },
+    )
+  }
+
   const runningCount = runs.filter((r) => r.status === 'running').length
   const doneCount = runs.filter((r) => r.status === 'done').length
 
@@ -56,7 +70,7 @@ export function AgentPanel({ repoSlug }: { repoSlug: string }) {
         <span className="mr-2 flex-shrink-0 py-3 font-mono text-[11px] whitespace-nowrap text-muted">
           {runningCount} running · {doneCount} done
         </span>
-        <AgentTabBar runs={runs} activeId={active.id} onSelect={setUserPickedId} />
+        <AgentTabBar runs={runs} activeId={active.id} onSelect={handleSelectTab} />
         <div className="ml-2.5 flex-shrink-0 py-2.5">
           <ViewModeToggle value={viewMode} onChange={setViewMode} />
         </div>

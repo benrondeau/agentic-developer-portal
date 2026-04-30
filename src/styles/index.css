@@ -1,0 +1,150 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme {
+  --font-mono: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-sans: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-bg: var(--c-bg);
+  --color-surface: var(--c-surface);
+  --color-surface-2: var(--c-surface-2);
+  --color-border: var(--c-border);
+  --color-border-2: var(--c-border-2);
+  --color-text: var(--c-text);
+  --color-muted: var(--c-muted);
+  --color-muted-2: var(--c-muted-2);
+  --color-accent: var(--c-accent);
+  --color-accent-bg: var(--c-accent-bg);
+  --color-accent-text: var(--c-accent-text);
+  --color-green: var(--c-green);
+  --color-green-bg: var(--c-green-bg);
+  --color-orange: var(--c-orange);
+  --color-orange-bg: var(--c-orange-bg);
+  --color-red: var(--c-red);
+  --color-red-bg: var(--c-red-bg);
+  --color-yellow: var(--c-yellow);
+  --color-yellow-bg: var(--c-yellow-bg);
+  --color-purple: var(--c-purple);
+  --color-purple-bg: var(--c-purple-bg);
+  --color-nav-bg: var(--c-nav-bg);
+  --color-nav-muted: var(--c-nav-muted);
+  --color-term-bg: var(--c-term-bg);
+  --color-term-text: var(--c-term-text);
+}
+
+:root,
+[data-theme='light'] {
+  --c-bg: #fafafa;
+  --c-surface: #ffffff;
+  --c-surface-2: #f3f3f3;
+  --c-border: #e1e4e8;
+  --c-border-2: #eaecef;
+  --c-text: #24292e;
+  --c-muted: #6a737d;
+  --c-muted-2: #959da5;
+  --c-accent: #0366d6;
+  --c-accent-bg: #dbedff;
+  --c-accent-text: #0366d6;
+  --c-green: #1a7f37;
+  --c-green-bg: #dafbe1;
+  --c-orange: #bf8700;
+  --c-orange-bg: #fff8c5;
+  --c-red: #cf222e;
+  --c-red-bg: #ffebe9;
+  --c-yellow: #9a6700;
+  --c-yellow-bg: #fff8c5;
+  --c-purple: #8250df;
+  --c-purple-bg: #f5e6ff;
+  --c-nav-bg: #24292e;
+  --c-nav-muted: #586069;
+  --c-term-bg: #1e1e1e;
+  --c-term-text: #d4d4d4;
+}
+
+[data-theme='dark'] {
+  --c-bg: #1e1e1e;
+  --c-surface: #252526;
+  --c-surface-2: #2d2d30;
+  --c-border: #3e3e42;
+  --c-border-2: #333337;
+  --c-text: #d4d4d4;
+  --c-muted: #858585;
+  --c-muted-2: #5a5a5a;
+  --c-accent: #569cd6;
+  --c-accent-bg: #264f78;
+  --c-accent-text: #9cdcfe;
+  --c-green: #4ec9b0;
+  --c-green-bg: #1a3331;
+  --c-orange: #ce9178;
+  --c-orange-bg: #3a2a1f;
+  --c-red: #f48771;
+  --c-red-bg: #3a1f1f;
+  --c-yellow: #dcdcaa;
+  --c-yellow-bg: #3a3520;
+  --c-purple: #c586c0;
+  --c-purple-bg: #3a2a3a;
+  --c-nav-bg: #181818;
+  --c-nav-muted: #3a3a3a;
+  --c-term-bg: #0d0d0d;
+  --c-term-text: #d4d4d4;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    margin: 0;
+    background: var(--c-bg);
+    color: var(--c-text);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: var(--c-accent-bg);
+    color: var(--c-accent-text);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@utility animate-spin-slow {
+  animation: spin 1.4s linear infinite;
+}
+@utility animate-blink {
+  animation: blink 1s infinite;
+}
+@utility animate-pulse-soft {
+  animation: pulse-soft 1.5s infinite;
+}

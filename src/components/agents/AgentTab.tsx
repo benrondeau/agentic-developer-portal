@@ -1,13 +1,7 @@
 import { useEffect, useRef } from 'react'
 import type { AgentRunStatus } from '../../types/agent.ts'
+import { STATUS_DOT } from './statusDot.ts'
 import { cn } from '../../utils/cn.ts'
-
-const statusDot: Record<AgentRunStatus, string> = {
-  running: 'bg-green animate-pulse-soft',
-  done: 'bg-muted',
-  error: 'bg-red',
-  aborted: 'bg-muted',
-}
 
 type AgentTabProps = {
   label: string
@@ -40,7 +34,7 @@ export function AgentTab({ label, status, active, onClick }: AgentTabProps) {
           : 'border-transparent bg-transparent text-muted hover:text-text',
       )}
     >
-      <span className={cn('h-1.5 w-1.5 flex-shrink-0 rounded-full', statusDot[status])} />
+      <span className={cn('h-1.5 w-1.5 flex-shrink-0 rounded-full', STATUS_DOT[status])} />
       {label}
     </button>
   )

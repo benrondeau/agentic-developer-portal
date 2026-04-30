@@ -38,7 +38,10 @@ export function AgentMeta({ run }: { run: AgentRun }) {
         <span>progress</span>
         <span>{Math.round(run.pct)}%</span>
       </div>
-      <ProgressBar pct={run.pct} tone={run.status === 'done' ? 'done' : 'accent'} />
+      <ProgressBar
+        pct={run.pct}
+        tone={run.status === 'done' ? 'done' : run.status === 'error' ? 'error' : 'accent'}
+      />
 
       <div className="mt-2 grid grid-cols-3 gap-2 border-t border-dashed border-border pt-2">
         <MetaCell

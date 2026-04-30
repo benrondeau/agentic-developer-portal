@@ -4,6 +4,7 @@ import { DrawerShell } from './DrawerShell.tsx'
 import { LanguageIcon } from '../repos/LanguageIcon.tsx'
 import { Icon } from '../primitives/Icon.tsx'
 import { ProgressBar } from '../primitives/ProgressBar.tsx'
+import { STATUS_DOT } from '../agents/statusDot.ts'
 import { useAgentRuntime } from '../../hooks/useAgentRuntime.ts'
 import { repos } from '../../data/repos.ts'
 import { formatElapsed } from '../../utils/format.ts'
@@ -26,9 +27,12 @@ type GlobalAgentsDrawerProps = {
 
 export function GlobalAgentsDrawer({ onClose }: GlobalAgentsDrawerProps) {
   const navigate = useNavigate()
-  const { runs } = useAgentRuntime()
+  const { runs, activeAgentCount } = useAgentRuntime()
   const now = useNow(true, 1000)
-  const [filter, setFilter] = useState<StatusFilter>('all')
+  // Default to the 'running' filter so the rows visible on open match the
+  // "X agents active" count in the NavBar. Both ultimately read from
+  // `activeAgentCount` so they can't drift.
+  const [filter, setFilter] = useState<StatusFilter>('running')
 
   const matcher = FILTERS.find((f) => f.id === filter)?.matches ?? (() => true)
   const filteredRuns = runs.filter((r) => matcher(r.status))
@@ -41,10 +45,12 @@ export function GlobalAgentsDrawer({ onClose }: GlobalAgentsDrawerProps) {
     .filter((group) => group.agents.length > 0)
 
   // Counts shown in the filter chips reflect the full run set, not the filtered one,
-  // so the user can see how many agents fall under each tab before clicking.
+  // so the user can see how many agents fall under each tab before clicking. The
+  // 'running' count is sourced from context (`activeAgentCount`) so it stays in
+  // lock-step with the NavBar's number.
   const counts: Record<StatusFilter, number> = {
     all: runs.length,
-    running: runs.filter((r) => r.status === 'running').length,
+    running: activeAgentCount,
     done: runs.filter((r) => r.status === 'done').length,
     error: runs.filter((r) => r.status === 'error' || r.status === 'aborted').length,
   }
@@ -58,9 +64,6 @@ export function GlobalAgentsDrawer({ onClose }: GlobalAgentsDrawerProps) {
     <DrawerShell side="right" width={320} onClose={onClose}>
       <div className="flex flex-shrink-0 items-center gap-2 border-b border-border px-4 py-3">
         <span className="flex-1 font-mono text-[15px] font-semibold text-text">Active Agents</span>
-        <span className="font-mono text-[11px] text-muted">
-          {counts.running} running · {counts.done} done
-        </span>
         <button
           type="button"
           onClick={onClose}
@@ -138,19 +141,14 @@ function GlobalAgentRow({ agent, now, onClick }: { agent: AgentRun; now: number;
     >
       <div className="mb-1 flex items-center gap-2">
         <span
-          className={cn(
-            'h-1.5 w-1.5 flex-shrink-0 rounded-full',
-            agent.status === 'running'
-              ? 'animate-pulse-soft bg-accent'
-              : 'border-[1.5px] border-muted bg-transparent',
-          )}
+          className={cn('h-1.5 w-1.5 flex-shrink-0 rounded-full', STATUS_DOT[agent.status])}
         />
         <span className="flex-1 font-mono text-[12px] text-text">{agent.label}</span>
         <span className="font-mono text-[11px] text-muted">{elapsedLabel}</span>
       </div>
       <ProgressBar
         pct={agent.pct}
-        tone={agent.status === 'done' ? 'muted' : 'accent'}
+        tone={agent.status === 'done' ? 'done' : agent.status === 'error' ? 'error' : 'accent'}
         height={4}
         className="ml-3.5"
       />

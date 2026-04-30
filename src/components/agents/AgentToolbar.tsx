@@ -48,7 +48,6 @@ export function AgentToolbar({ run }: { run: AgentRun }) {
       {run.status === 'error' && (
         <Button label="re-run agent" variant="primary" small icon="refresh" onClick={openRetryConfirm} />
       )}
-      {run.status === 'error' && <Button label="edit & retry" small icon="edit" />}
       <Button
         label={copied ? 'copied!' : 'copy log'}
         small

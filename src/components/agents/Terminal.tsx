@@ -37,8 +37,12 @@ export function Terminal({ lines }: { lines: LogLine[] }) {
       ref={scrollRef}
       className="flex-1 overflow-y-auto rounded-[4px] bg-term-bg px-3 py-2.5 font-mono text-[12px] leading-relaxed text-term-text"
     >
-      {lines.map((l, i) => (
-        <div key={i} className="flex items-baseline gap-1.5">
+      {lines.map((l) => (
+        // The blink line at the tail mutates its `ts` each tick; key it on a
+        // sentinel so it doesn't unmount/remount and lose its CSS animation.
+        // All non-blink log lines have unique text within a run (the runtime
+        // dedups against `text`), so plain text is a safe stable key.
+        <div key={l.blink ? '__blink__' : l.text} className="flex items-baseline gap-1.5">
           <span className="flex-shrink-0 text-muted-2">{l.ts}</span>
           <span className="inline-flex w-3 flex-shrink-0 translate-y-px items-center justify-center">
             <GlyphFor kind={l.kind} />

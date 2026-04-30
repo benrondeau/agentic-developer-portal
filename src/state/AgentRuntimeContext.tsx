@@ -30,6 +30,9 @@ type Action =
 let runIdSeq = 0
 const newRunId = (taskId: string) => `run-${taskId}-${++runIdSeq}-${Math.random().toString(36).slice(2, 6)}`
 
+/** Maximum positive jitter applied per tick (% of total run progress). */
+const TICK_JITTER_PCT = 1.5
+
 function progressRun(run: AgentRun, now: number): AgentRun {
   if (run.status !== 'running') return run
 
@@ -38,10 +41,13 @@ function progressRun(run: AgentRun, now: number): AgentRun {
   const tpl = templatesByTaskId[run.taskId]
   if (!tpl) return run
 
-  // 1. determine new pct (and trigger fail at the seeded threshold for sec-scan).
+  // 1. determine new pct. Add a small forward jitter so progress doesn't feel
+  //    perfectly linear, then clamp to the fail/done cap and to the prior pct
+  //    (progress is monotonic — never goes backwards across ticks).
   const willFail = tpl.outcome === 'fail' && tpl.failAtPct != null
   const cap = willFail ? tpl.failAtPct! : 100
-  const nextPct = Math.min(targetPct, cap)
+  const jitter = targetPct > 0 && targetPct < cap ? Math.random() * TICK_JITTER_PCT : 0
+  const nextPct = Math.max(run.pct, Math.min(targetPct + jitter, cap))
 
   // 2. recompute step states from doneAtPct thresholds.
   const nextSteps: AgentStep[] = tpl.steps.map((stepDef, i) => {
@@ -104,7 +110,10 @@ function progressRun(run: AgentRun, now: number): AgentRun {
     while (log.length && log[log.length - 1].blink) log.pop()
   }
 
-  return { ...run, pct: nextPct, status, endedAt, steps: nextSteps, log }
+  // Attach the template's success artifact (if any) the moment the run completes.
+  const result = status === 'done' && run.result == null ? tpl.successResult : run.result
+
+  return { ...run, pct: nextPct, status, endedAt, steps: nextSteps, log, result }
 }
 
 function reducer(state: State, action: Action): State {

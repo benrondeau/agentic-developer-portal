@@ -2,6 +2,7 @@ import { Outlet } from 'react-router'
 import { NavBar } from '../components/chrome/NavBar.tsx'
 import { RepoList } from '../components/repos/RepoList.tsx'
 import { LaunchModalController } from '../components/modals/LaunchModalController.tsx'
+import { ReportModalController } from '../components/modals/ReportModalController.tsx'
 import { DrawerController } from '../components/drawers/DrawerController.tsx'
 import { useAgentRuntime } from '../hooks/useAgentRuntime.ts'
 
@@ -16,6 +17,7 @@ export function Layout() {
         <Outlet />
         <DrawerController />
         <LaunchModalController />
+        <ReportModalController />
       </div>
     </div>
   )

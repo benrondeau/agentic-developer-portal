@@ -6,8 +6,8 @@ export function StepList({ steps }: { steps: AgentStep[] }) {
   return (
     <div>
       <Label>Steps</Label>
-      {steps.map((s, i) => (
-        <StepRow key={i} step={s} />
+      {steps.map((s) => (
+        <StepRow key={s.label} step={s} />
       ))}
     </div>
   )

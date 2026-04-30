@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import type { AgentRunStatus } from '../../types/agent.ts'
 import { cn } from '../../utils/cn.ts'
 
@@ -16,8 +17,19 @@ type AgentTabProps = {
 }
 
 export function AgentTab({ label, status, active, onClick }: AgentTabProps) {
+  const ref = useRef<HTMLButtonElement>(null)
+
+  // Bring the active tab into view when it becomes active. Fires when the
+  // user picks an agent from the global drawer (which sets `?run=<id>`) and
+  // the tab is currently scrolled out of view in the overflow tab bar.
+  useEffect(() => {
+    if (!active) return
+    ref.current?.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' })
+  }, [active])
+
   return (
     <button
+      ref={ref}
       type="button"
       onClick={onClick}
       className={cn(

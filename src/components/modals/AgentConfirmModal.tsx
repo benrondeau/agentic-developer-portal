@@ -49,7 +49,7 @@ export function AgentConfirmModal({ task, repo, mode = 'launch', onCancel, onCon
         </div>
         <ul className="m-0 mb-3 list-none p-0">
           {task.bullets.map((b, i) => (
-            <li key={i} className="flex gap-2 py-1 font-mono text-[14px] text-text">
+            <li key={b} className="flex gap-2 py-1 font-mono text-[14px] text-text">
               <span className="text-muted">{String(i + 1).padStart(2, '0')}.</span>
               <span>{b}</span>
             </li>

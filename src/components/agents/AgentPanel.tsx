@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useSearchParams } from 'react-router'
 import { Icon } from '../primitives/Icon.tsx'
 import { EmptyPane } from '../primitives/EmptyPane.tsx'
 import { Label } from '../primitives/Label.tsx'
@@ -10,6 +9,7 @@ import { StepList } from './StepList.tsx'
 import { Terminal } from './Terminal.tsx'
 import { AgentToolbar } from './AgentToolbar.tsx'
 import { useAgentRuntime } from '../../hooks/useAgentRuntime.ts'
+import { useUrlParam } from '../../hooks/useUrlParam.ts'
 
 const PANEL_BASE = 'flex w-[50%] min-w-0 flex-shrink-0 flex-col bg-surface'
 
@@ -34,8 +34,7 @@ export function AgentPanel({ repoSlug }: { repoSlug: string }) {
 
   // The active tab is driven by the `?run=<id>` query param so it can be set from
   // outside (e.g. the global agents drawer). Falls back to the latest run.
-  const [searchParams, setSearchParams] = useSearchParams()
-  const runIdFromUrl = searchParams.get('run')
+  const [runIdFromUrl, setRunIdParam] = useUrlParam('run')
   const [viewMode, setViewMode] = useState<ViewMode>('split')
 
   if (runs.length === 0) {
@@ -45,18 +44,13 @@ export function AgentPanel({ repoSlug }: { repoSlug: string }) {
   }
 
   const pickedRun = runIdFromUrl ? runs.find((r) => r.id === runIdFromUrl) : null
+  // The URL pointed at a run that no longer exists for this repo (stale deep-link,
+  // dismissed, or wrong repo). Surface a banner so the user understands why we're
+  // showing something else.
+  const isStaleRun = runIdFromUrl != null && pickedRun == null
   const active = pickedRun ?? runs[runs.length - 1]
 
-  const handleSelectTab = (runId: string) => {
-    setSearchParams(
-      (prev) => {
-        const next = new URLSearchParams(prev)
-        next.set('run', runId)
-        return next
-      },
-      { replace: true },
-    )
-  }
+  const handleSelectTab = (runId: string) => setRunIdParam(runId)
 
   const runningCount = runs.filter((r) => r.status === 'running').length
   const doneCount = runs.filter((r) => r.status === 'done').length
@@ -75,6 +69,23 @@ export function AgentPanel({ repoSlug }: { repoSlug: string }) {
           <ViewModeToggle value={viewMode} onChange={setViewMode} />
         </div>
       </div>
+
+      {isStaleRun && (
+        <div className="flex flex-shrink-0 items-center gap-2 border-b border-border bg-surface-2 px-4 py-2 font-mono text-[11px] text-muted">
+          <Icon name="warn" size={11} color="var(--c-muted)" />
+          <span>
+            agent <span className="font-semibold text-text">{runIdFromUrl}</span> is no longer available
+            on this repo — showing the latest run instead.
+          </span>
+          <button
+            type="button"
+            onClick={() => setRunIdParam(null)}
+            className="ml-auto cursor-pointer underline-offset-2 hover:text-text hover:underline"
+          >
+            dismiss
+          </button>
+        </div>
+      )}
 
       <AgentMeta run={active} />
 

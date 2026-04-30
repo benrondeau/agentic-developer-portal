@@ -128,6 +128,16 @@ const depMap: AgentTemplate = {
     { atPct: 82, text: '⚠ cycle: workers → tasks → workers', kind: 'warn' },
     { atPct: 100, text: '✓ graph rendered (218 nodes, 412 edges)', kind: 'ok' },
   ],
+  successResult: {
+    kind: 'report',
+    summary: 'graph: 218 modules · 412 edges · 2 cycles detected',
+    details: [
+      'cycle: auth → users → auth (high coupling — extract a shared session module)',
+      'cycle: workers → tasks → workers (move shared types into a workers/types submodule)',
+      'fan-in hot-spots: utils/format.py (47 importers), db/session.py (38)',
+      'orphan modules: scripts/legacy_export.py, scripts/old_migrate.py',
+    ],
+  },
 }
 
 export const templatesByTaskId: Record<string, AgentTemplate> = {

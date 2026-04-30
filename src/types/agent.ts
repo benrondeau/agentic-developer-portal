@@ -29,6 +29,11 @@ export type LogScriptEntry = {
   kind?: LogKind
 }
 
+/** When a run completes, the resulting artifact surfaced in the toolbar. */
+export type AgentResult =
+  | { kind: 'pr'; number: number; title: string }
+  | { kind: 'report'; summary: string; details?: string[] }
+
 export type AgentTemplate = {
   taskId: string
   steps: StepDef[]
@@ -37,6 +42,8 @@ export type AgentTemplate = {
   outcome: 'success' | 'fail'
   failAtPct?: number
   failMessage?: string
+  /** Artifact attached to the run when it completes successfully. */
+  successResult?: AgentResult
 }
 
 export type AgentRunStatus = 'running' | 'done' | 'error' | 'aborted'
@@ -58,5 +65,5 @@ export type AgentRun = {
   steps: AgentStep[]
   log: LogLine[]
   /** when 'done', the resulting artifact (PR number etc) for the toolbar. */
-  result?: { kind: 'pr'; number: number; title: string } | { kind: 'report'; summary: string }
+  result?: AgentResult
 }

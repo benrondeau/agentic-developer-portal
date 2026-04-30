@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { DrawerShell } from './DrawerShell.tsx'
 import { LanguageIcon } from '../repos/LanguageIcon.tsx'
@@ -7,8 +8,17 @@ import { useAgentRuntime } from '../../hooks/useAgentRuntime.ts'
 import { repos } from '../../data/repos.ts'
 import { formatElapsed } from '../../utils/format.ts'
 import { useNow } from '../../hooks/useNow.ts'
-import type { AgentRun } from '../../types/agent.ts'
+import type { AgentRun, AgentRunStatus } from '../../types/agent.ts'
 import { cn } from '../../utils/cn.ts'
+
+type StatusFilter = 'all' | 'running' | 'done' | 'error'
+
+const FILTERS: { id: StatusFilter; label: string; matches: (status: AgentRunStatus) => boolean }[] = [
+  { id: 'all', label: 'all', matches: () => true },
+  { id: 'running', label: 'running', matches: (s) => s === 'running' },
+  { id: 'done', label: 'done', matches: (s) => s === 'done' },
+  { id: 'error', label: 'failed', matches: (s) => s === 'error' || s === 'aborted' },
+]
 
 type GlobalAgentsDrawerProps = {
   onClose: () => void
@@ -18,16 +28,26 @@ export function GlobalAgentsDrawer({ onClose }: GlobalAgentsDrawerProps) {
   const navigate = useNavigate()
   const { runs } = useAgentRuntime()
   const now = useNow(true, 1000)
+  const [filter, setFilter] = useState<StatusFilter>('all')
+
+  const matcher = FILTERS.find((f) => f.id === filter)?.matches ?? (() => true)
+  const filteredRuns = runs.filter((r) => matcher(r.status))
 
   const grouped = repos
     .map((repo) => ({
       repo,
-      agents: runs.filter((r) => r.repoSlug === repo.slug),
+      agents: filteredRuns.filter((r) => r.repoSlug === repo.slug),
     }))
     .filter((group) => group.agents.length > 0)
 
-  const runningCount = runs.filter((r) => r.status === 'running').length
-  const doneCount = runs.filter((r) => r.status === 'done').length
+  // Counts shown in the filter chips reflect the full run set, not the filtered one,
+  // so the user can see how many agents fall under each tab before clicking.
+  const counts: Record<StatusFilter, number> = {
+    all: runs.length,
+    running: runs.filter((r) => r.status === 'running').length,
+    done: runs.filter((r) => r.status === 'done').length,
+    error: runs.filter((r) => r.status === 'error' || r.status === 'aborted').length,
+  }
 
   const openAgent = (slug: string, runId: string) => {
     onClose()
@@ -39,7 +59,7 @@ export function GlobalAgentsDrawer({ onClose }: GlobalAgentsDrawerProps) {
       <div className="flex flex-shrink-0 items-center gap-2 border-b border-border px-4 py-3">
         <span className="flex-1 font-mono text-[15px] font-semibold text-text">Active Agents</span>
         <span className="font-mono text-[11px] text-muted">
-          {runningCount} running · {doneCount} done
+          {counts.running} running · {counts.done} done
         </span>
         <button
           type="button"
@@ -49,6 +69,27 @@ export function GlobalAgentsDrawer({ onClose }: GlobalAgentsDrawerProps) {
         >
           ×
         </button>
+      </div>
+
+      <div className="flex flex-shrink-0 gap-1 border-b border-border px-3.5 py-2">
+        {FILTERS.map((f) => {
+          const isActive = f.id === filter
+          return (
+            <button
+              key={f.id}
+              type="button"
+              onClick={() => setFilter(f.id)}
+              className={cn(
+                'cursor-pointer rounded-[3px] border px-2 py-0.5 font-mono text-[11px]',
+                isActive
+                  ? 'border-accent bg-accent-bg text-accent-text'
+                  : 'border-border bg-transparent text-muted hover:text-text',
+              )}
+            >
+              {f.label} <span className="text-muted-2">{counts[f.id]}</span>
+            </button>
+          )
+        })}
       </div>
 
       <div className="flex-1 overflow-y-auto">
@@ -64,7 +105,9 @@ export function GlobalAgentsDrawer({ onClose }: GlobalAgentsDrawerProps) {
           </div>
         ))}
         {grouped.length === 0 && (
-          <div className="p-6 text-center font-mono text-[12px] text-muted">no agent activity</div>
+          <div className="p-6 text-center font-mono text-[12px] text-muted">
+            {runs.length === 0 ? 'no agent activity' : `no ${filter === 'all' ? '' : filter + ' '}agents`}
+          </div>
         )}
       </div>
 

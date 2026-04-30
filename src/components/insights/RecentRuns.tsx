@@ -29,8 +29,8 @@ function RecentRunRow({ run }: { run: RecentRun }) {
 export function RecentRuns({ runs }: { runs: RecentRun[] }) {
   return (
     <div>
-      {runs.map((r, i) => (
-        <RecentRunRow key={i} run={r} />
+      {runs.map((r) => (
+        <RecentRunRow key={`${r.label}|${r.elapsed}`} run={r} />
       ))}
     </div>
   )

@@ -300,28 +300,67 @@ type BranchProfile = {
 
 function branchProfile(branch: string): BranchProfile | null {
   if (branch === 'develop') {
-    return { lastPushLabel: '15m ago', fileMul: 1.02, prMul: 1.6, issueMul: 1.1, coverageDelta: -3, depIssueDelta: 1, ciDelta: -0.5 }
+    return {
+      lastPushLabel: '15m ago',
+      fileMul: 1.02,
+      prMul: 1.6,
+      issueMul: 1.1,
+      coverageDelta: -3,
+      depIssueDelta: 1,
+      ciDelta: -0.5,
+    }
   }
   if (branch.startsWith('release/')) {
-    return { lastPushLabel: '5d ago', fileMul: 1.0, prMul: 0.2, issueMul: 0.7, coverageDelta: 4, depIssueDelta: -1, ciDelta: 0.4 }
+    return {
+      lastPushLabel: '5d ago',
+      fileMul: 1.0,
+      prMul: 0.2,
+      issueMul: 0.7,
+      coverageDelta: 4,
+      depIssueDelta: -1,
+      ciDelta: 0.4,
+    }
   }
   if (branch.startsWith('feat/')) {
-    return { lastPushLabel: '38m ago', fileMul: 1.05, prMul: 0.4, issueMul: 1.0, coverageDelta: -8, depIssueDelta: 0, ciDelta: -1.5 }
+    return {
+      lastPushLabel: '38m ago',
+      fileMul: 1.05,
+      prMul: 0.4,
+      issueMul: 1.0,
+      coverageDelta: -8,
+      depIssueDelta: 0,
+      ciDelta: -1.5,
+    }
   }
   if (branch.startsWith('hotfix/')) {
-    return { lastPushLabel: '6m ago', fileMul: 1.0, prMul: 0.1, issueMul: 0.6, coverageDelta: 0, depIssueDelta: -2, ciDelta: -0.2, alwaysWarn: true }
+    return {
+      lastPushLabel: '6m ago',
+      fileMul: 1.0,
+      prMul: 0.1,
+      issueMul: 0.6,
+      coverageDelta: 0,
+      depIssueDelta: -2,
+      ciDelta: -0.2,
+      alwaysWarn: true,
+    }
   }
   return null
 }
 
 function transformStat(stat: RepoStat, p: BranchProfile): RepoStat {
   switch (stat.label.toLowerCase()) {
-    case 'open prs': return scaleIntStat(stat, p.prMul)
-    case 'open issues': return scaleIntStat(stat, p.issueMul, /* warnIfAbove */ 30)
-    case 'test coverage': return shiftPctStat(stat, p.coverageDelta, /* warnIfBelow */ 75)
-    case 'dep issues': return shiftIntStat(stat, p.depIssueDelta, /* warnIfAbove */ 4)
-    case 'ci pass rate': return shiftPctStat(stat, p.ciDelta, /* warnIfBelow */ 95)
-    default: return stat
+    case 'open prs':
+      return scaleIntStat(stat, p.prMul)
+    case 'open issues':
+      return scaleIntStat(stat, p.issueMul, /* warnIfAbove */ 30)
+    case 'test coverage':
+      return shiftPctStat(stat, p.coverageDelta, /* warnIfBelow */ 75)
+    case 'dep issues':
+      return shiftIntStat(stat, p.depIssueDelta, /* warnIfAbove */ 4)
+    case 'ci pass rate':
+      return shiftPctStat(stat, p.ciDelta, /* warnIfBelow */ 95)
+    default:
+      return stat
   }
 }
 

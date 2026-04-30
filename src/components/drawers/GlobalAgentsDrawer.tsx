@@ -112,21 +112,15 @@ export function GlobalAgentsDrawer({ onClose }: GlobalAgentsDrawerProps) {
       </div>
 
       <div className="flex-shrink-0 border-t border-border px-3.5 py-2.5">
-        <div className="text-center font-mono text-[12px] text-muted">click any agent to open its repo view</div>
+        <div className="text-center font-mono text-[12px] text-muted">
+          click any agent to open its repo view
+        </div>
       </div>
     </DrawerShell>
   )
 }
 
-function GlobalAgentRow({
-  agent,
-  now,
-  onClick,
-}: {
-  agent: AgentRun
-  now: number
-  onClick: () => void
-}) {
+function GlobalAgentRow({ agent, now, onClick }: { agent: AgentRun; now: number; onClick: () => void }) {
   const elapsedLabel =
     agent.status === 'running'
       ? formatElapsed(now, agent.startedAt)
@@ -146,7 +140,9 @@ function GlobalAgentRow({
         <span
           className={cn(
             'h-1.5 w-1.5 flex-shrink-0 rounded-full',
-            agent.status === 'running' ? 'animate-pulse-soft bg-accent' : 'border-[1.5px] border-muted bg-transparent',
+            agent.status === 'running'
+              ? 'animate-pulse-soft bg-accent'
+              : 'border-[1.5px] border-muted bg-transparent',
           )}
         />
         <span className="flex-1 font-mono text-[12px] text-text">{agent.label}</span>

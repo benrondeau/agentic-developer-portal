@@ -32,7 +32,11 @@ function buildRunFromSeed(seed: Seed, now: number): AgentRun {
     }
     if (seed.pct >= s.doneAtPct) return { label: s.label, detail: s.detail, status: 'done' }
     const isFirstUndone = tpl.steps.slice(0, i).every((ss) => seed.pct >= ss.doneAtPct)
-    return { label: s.label, detail: s.detail, status: isFirstUndone && seed.status === 'running' ? 'running' : 'pending' }
+    return {
+      label: s.label,
+      detail: s.detail,
+      status: isFirstUndone && seed.status === 'running' ? 'running' : 'pending',
+    }
   })
 
   const log: LogLine[] = tpl.logScript
@@ -95,15 +99,88 @@ const seeds: Seed[] = [
   },
 
   // — cross-repo seeds for the global drawer —
-  { id: 'seed-fe-refactor', taskId: 'refactor', label: 'refactor', repoSlug: 'frontend-v3', status: 'running', pct: 48, startedSecondsAgo: 130 },
-  { id: 'seed-fe-tests', taskId: 'run-tests', label: 'run-tests', repoSlug: 'frontend-v3', status: 'running', pct: 71, startedSecondsAgo: 50 },
-  { id: 'seed-k8s-sec', taskId: 'sec-scan', label: 'sec-scan', repoSlug: 'infra-k8s', status: 'running', pct: 40, startedSecondsAgo: 240 },
-  { id: 'seed-k8s-map', taskId: 'dep-map', label: 'dep-map', repoSlug: 'infra-k8s', status: 'running', pct: 22, startedSecondsAgo: 38 },
-  { id: 'seed-ml-tests', taskId: 'run-tests', label: 'run-tests', repoSlug: 'ml-pipeline', status: 'running', pct: 55, startedSecondsAgo: 68 },
-  { id: 'seed-ml-dep', taskId: 'dep-upgrade', label: 'dep-upgrade', repoSlug: 'ml-pipeline', status: 'error', pct: 40, startedSecondsAgo: 8 * 60, endedSecondsAgo: 4 * 60 },
-  { id: 'seed-data-refactor', taskId: 'refactor', label: 'refactor', repoSlug: 'data-ingest', status: 'running', pct: 34, startedSecondsAgo: 200 },
-  { id: 'seed-edge-sec', taskId: 'sec-scan', label: 'sec-scan', repoSlug: 'edge-proxy', status: 'running', pct: 30, startedSecondsAgo: 168 },
-  { id: 'seed-edge-pr', taskId: 'create-pr', label: 'pr-create', repoSlug: 'edge-proxy', status: 'running', pct: 15, startedSecondsAgo: 11 },
+  {
+    id: 'seed-fe-refactor',
+    taskId: 'refactor',
+    label: 'refactor',
+    repoSlug: 'frontend-v3',
+    status: 'running',
+    pct: 48,
+    startedSecondsAgo: 130,
+  },
+  {
+    id: 'seed-fe-tests',
+    taskId: 'run-tests',
+    label: 'run-tests',
+    repoSlug: 'frontend-v3',
+    status: 'running',
+    pct: 71,
+    startedSecondsAgo: 50,
+  },
+  {
+    id: 'seed-k8s-sec',
+    taskId: 'sec-scan',
+    label: 'sec-scan',
+    repoSlug: 'infra-k8s',
+    status: 'running',
+    pct: 40,
+    startedSecondsAgo: 240,
+  },
+  {
+    id: 'seed-k8s-map',
+    taskId: 'dep-map',
+    label: 'dep-map',
+    repoSlug: 'infra-k8s',
+    status: 'running',
+    pct: 22,
+    startedSecondsAgo: 38,
+  },
+  {
+    id: 'seed-ml-tests',
+    taskId: 'run-tests',
+    label: 'run-tests',
+    repoSlug: 'ml-pipeline',
+    status: 'running',
+    pct: 55,
+    startedSecondsAgo: 68,
+  },
+  {
+    id: 'seed-ml-dep',
+    taskId: 'dep-upgrade',
+    label: 'dep-upgrade',
+    repoSlug: 'ml-pipeline',
+    status: 'error',
+    pct: 40,
+    startedSecondsAgo: 8 * 60,
+    endedSecondsAgo: 4 * 60,
+  },
+  {
+    id: 'seed-data-refactor',
+    taskId: 'refactor',
+    label: 'refactor',
+    repoSlug: 'data-ingest',
+    status: 'running',
+    pct: 34,
+    startedSecondsAgo: 200,
+  },
+  {
+    id: 'seed-edge-sec',
+    taskId: 'sec-scan',
+    label: 'sec-scan',
+    repoSlug: 'edge-proxy',
+    status: 'running',
+    pct: 30,
+    startedSecondsAgo: 168,
+  },
+  {
+    id: 'seed-edge-pr',
+    taskId: 'create-pr',
+    label: 'pr-create',
+    repoSlug: 'edge-proxy',
+    status: 'running',
+    pct: 15,
+    startedSecondsAgo: 11,
+  },
   {
     id: 'seed-gateway-dep',
     taskId: 'dep-upgrade',

@@ -4,11 +4,9 @@
 
 **Wireframes + UX Explanation:** https://github.com/benrondeau/agentic-developer-portal/tree/main/wireframes
 
-
 ## UX Overview
 
 The user interface is comprised of the following elements:
-
 
 ### NavBar
 
@@ -68,15 +66,15 @@ Left-side overlay for switching orgs (mocked).
 
 State that should survive reload, deep-link, or the back button lives in URL query params. They compose freely:
 
-| Param            | Purpose                                                                  |
-| ---------------- | ------------------------------------------------------------------------ |
-| `?branch=<name>` | Currently checked-out branch — drives all per-branch data derivation.    |
+| Param            | Purpose                                                                        |
+| ---------------- | ------------------------------------------------------------------------------ |
+| `?branch=<name>` | Currently checked-out branch — drives all per-branch data derivation.          |
 | `?run=<id>`      | Currently focused run in the agent panel (set by the drawer or by tab clicks). |
-| `?launch=<task>` | Show the launch-confirmation modal for `task`.                           |
-| `?retry=<task>`  | Show the same modal in retry mode (from the agent toolbar).              |
-| `?report=<id>`   | Open the report-artifact viewer for a completed run.                     |
-| `?drawer=agents` | Open the global agents drawer.                                           |
-| `?drawer=org`    | Open the org-switcher drawer.                                            |
+| `?launch=<task>` | Show the launch-confirmation modal for `task`.                                 |
+| `?retry=<task>`  | Show the same modal in retry mode (from the agent toolbar).                    |
+| `?report=<id>`   | Open the report-artifact viewer for a completed run.                           |
+| `?drawer=agents` | Open the global agents drawer.                                                 |
+| `?drawer=org`    | Open the org-switcher drawer.                                                  |
 
 All param updates go through a small `useUrlParam(key)` hook ([src/hooks/useUrlParam.ts](src/hooks/useUrlParam.ts)) that reads, writes, and deletes a single param while preserving every other one — a single place to enforce that invariant.
 
@@ -93,20 +91,19 @@ CSS-variable-driven light and dark themes via `data-theme="light|dark"` on `<htm
 - `Enter` — launch the resolved or highlighted command.
 - `Esc` — close popovers, drawers, modals.
 
-
 ## Technical info
 
 ### Stack
 
-| Layer        | Choice                                         |
-| ------------ | ---------------------------------------------- |
-| Framework    | React 19 (with the React Compiler enabled)     |
-| Language     | TypeScript (strict)                            |
-| Bundler      | Vite 8 + Rolldown (`@rolldown/plugin-babel`)   |
-| Routing      | React Router 7 (data routers, `useSearchParams`) |
-| Styling      | Tailwind CSS v4 (CSS-first config) + PostCSS   |
-| Linting      | ESLint 10 + `typescript-eslint`                |
-| Package manager | pnpm                                        |
+| Layer           | Choice                                           |
+| --------------- | ------------------------------------------------ |
+| Framework       | React 19 (with the React Compiler enabled)       |
+| Language        | TypeScript (strict)                              |
+| Bundler         | Vite 8 + Rolldown (`@rolldown/plugin-babel`)     |
+| Routing         | React Router 7 (data routers, `useSearchParams`) |
+| Styling         | Tailwind CSS v4 (CSS-first config) + PostCSS     |
+| Linting         | ESLint 10 + `typescript-eslint`                  |
+| Package manager | pnpm                                             |
 
 ### Project layout
 

@@ -33,7 +33,9 @@ export function ReportModalController() {
 
         {run.result.details && run.result.details.length > 0 && (
           <>
-            <div className="mb-1.5 font-mono text-[11px] tracking-[0.06em] text-muted uppercase">Findings</div>
+            <div className="mb-1.5 font-mono text-[11px] tracking-[0.06em] text-muted uppercase">
+              Findings
+            </div>
             <ul className="m-0 list-none p-0">
               {run.result.details.map((d) => (
                 <li key={d} className="flex gap-2 py-1 font-mono text-[13px] leading-relaxed text-text">

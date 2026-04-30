@@ -9,13 +9,9 @@ type ProgressBarProps = {
 }
 
 export function ProgressBar({ pct, tone = 'accent', className, height = 5 }: ProgressBarProps) {
-  const fillClass =
-    tone === 'done' ? 'bg-green' : tone === 'muted' ? 'bg-muted' : 'bg-accent'
+  const fillClass = tone === 'done' ? 'bg-green' : tone === 'muted' ? 'bg-muted' : 'bg-accent'
   return (
-    <div
-      className={cn('overflow-hidden rounded-[3px] bg-border', className)}
-      style={{ height }}
-    >
+    <div className={cn('overflow-hidden rounded-[3px] bg-border', className)} style={{ height }}>
       <div
         className={cn('h-full rounded-[3px] transition-[width] duration-300 ease-out', fillClass)}
         style={{ width: `${Math.max(0, Math.min(100, pct))}%` }}

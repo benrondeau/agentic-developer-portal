@@ -46,7 +46,15 @@ const paths: Record<IconName, (color: string) => ReactNode> = {
   'lang-py': () => (
     <g>
       <circle cx="8" cy="8" r="7" fill="#3776ab" />
-      <text x="8" y="11" textAnchor="middle" fontSize="8" fontFamily="Fira Code,monospace" fontWeight="700" fill="#ffd43b">
+      <text
+        x="8"
+        y="11"
+        textAnchor="middle"
+        fontSize="8"
+        fontFamily="Fira Code,monospace"
+        fontWeight="700"
+        fill="#ffd43b"
+      >
         py
       </text>
     </g>
@@ -54,7 +62,15 @@ const paths: Record<IconName, (color: string) => ReactNode> = {
   'lang-ts': () => (
     <g>
       <rect x="1" y="1" width="14" height="14" rx="2" fill="#3178c6" />
-      <text x="8" y="11" textAnchor="middle" fontSize="8" fontFamily="Fira Code,monospace" fontWeight="700" fill="#fff">
+      <text
+        x="8"
+        y="11"
+        textAnchor="middle"
+        fontSize="8"
+        fontFamily="Fira Code,monospace"
+        fontWeight="700"
+        fill="#fff"
+      >
         TS
       </text>
     </g>
@@ -62,7 +78,15 @@ const paths: Record<IconName, (color: string) => ReactNode> = {
   'lang-go': () => (
     <g>
       <circle cx="8" cy="8" r="7" fill="#00add8" />
-      <text x="8" y="11" textAnchor="middle" fontSize="7" fontFamily="Fira Code,monospace" fontWeight="700" fill="#fff">
+      <text
+        x="8"
+        y="11"
+        textAnchor="middle"
+        fontSize="7"
+        fontFamily="Fira Code,monospace"
+        fontWeight="700"
+        fill="#fff"
+      >
         GO
       </text>
     </g>
@@ -70,7 +94,15 @@ const paths: Record<IconName, (color: string) => ReactNode> = {
   'lang-rust': () => (
     <g>
       <circle cx="8" cy="8" r="7" fill="#dea584" />
-      <text x="8" y="11" textAnchor="middle" fontSize="7" fontFamily="Fira Code,monospace" fontWeight="700" fill="#000">
+      <text
+        x="8"
+        y="11"
+        textAnchor="middle"
+        fontSize="7"
+        fontFamily="Fira Code,monospace"
+        fontWeight="700"
+        fill="#000"
+      >
         RS
       </text>
     </g>
@@ -78,7 +110,15 @@ const paths: Record<IconName, (color: string) => ReactNode> = {
   'lang-java': () => (
     <g>
       <circle cx="8" cy="8" r="7" fill="#e76f00" />
-      <text x="8" y="11" textAnchor="middle" fontSize="6" fontFamily="Fira Code,monospace" fontWeight="700" fill="#fff">
+      <text
+        x="8"
+        y="11"
+        textAnchor="middle"
+        fontSize="6"
+        fontFamily="Fira Code,monospace"
+        fontWeight="700"
+        fill="#fff"
+      >
         JV
       </text>
     </g>
@@ -92,7 +132,14 @@ const paths: Record<IconName, (color: string) => ReactNode> = {
   'lang-cli': () => (
     <g>
       <rect x="1" y="2" width="14" height="12" rx="1.5" fill="#2d2d2d" stroke="#555" strokeWidth="0.5" />
-      <path d="M3.5 6 L5.5 8 L3.5 10" fill="none" stroke="#4ec9b0" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M3.5 6 L5.5 8 L3.5 10"
+        fill="none"
+        stroke="#4ec9b0"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
       <line x1="6.5" y1="10.3" x2="10" y2="10.3" stroke="#4ec9b0" strokeWidth="1.2" strokeLinecap="round" />
     </g>
   ),
@@ -106,7 +153,12 @@ const paths: Record<IconName, (color: string) => ReactNode> = {
     />
   ),
   refactor: (c) => (
-    <path d="M3 8a5 5 0 018-3.5M13 8a5 5 0 01-8 3.5M11 4l1 1.5h-2zM5 12l-1-1.5h2z" fill={c} stroke={c} strokeWidth="0.4" />
+    <path
+      d="M3 8a5 5 0 018-3.5M13 8a5 5 0 01-8 3.5M11 4l1 1.5h-2zM5 12l-1-1.5h2z"
+      fill={c}
+      stroke={c}
+      strokeWidth="0.4"
+    />
   ),
   security: (c) => (
     <path
@@ -118,7 +170,13 @@ const paths: Record<IconName, (color: string) => ReactNode> = {
     />
   ),
   package: (c) => (
-    <path d="M2 5l6-3 6 3v6l-6 3-6-3V5zM2 5l6 3 6-3M8 8v6" fill="none" stroke={c} strokeWidth="1.2" strokeLinejoin="round" />
+    <path
+      d="M2 5l6-3 6 3v6l-6 3-6-3V5zM2 5l6 3 6-3M8 8v6"
+      fill="none"
+      stroke={c}
+      strokeWidth="1.2"
+      strokeLinejoin="round"
+    />
   ),
   beaker: (c) => (
     <path
@@ -141,7 +199,14 @@ const paths: Record<IconName, (color: string) => ReactNode> = {
     </g>
   ),
   check: (c) => (
-    <path d="M3 8.5l3 3 7-7" fill="none" stroke={c} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    <path
+      d="M3 8.5l3 3 7-7"
+      fill="none"
+      stroke={c}
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   ),
   circle: (c) => <circle cx="8" cy="8" r="3" fill={c} />,
   'circle-o': (c) => <circle cx="8" cy="8" r="3" fill="none" stroke={c} strokeWidth="1.3" />,
@@ -181,15 +246,38 @@ const paths: Record<IconName, (color: string) => ReactNode> = {
     </g>
   ),
   'chevron-d': (c) => (
-    <path d="M3 6l5 5 5-5" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    <path
+      d="M3 6l5 5 5-5"
+      fill="none"
+      stroke={c}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   ),
   'chevron-r': (c) => (
-    <path d="M6 3l5 5-5 5" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    <path
+      d="M6 3l5 5-5 5"
+      fill="none"
+      stroke={c}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   ),
   'arrow-r': (c) => (
-    <path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    <path
+      d="M3 8h10M9 4l4 4-4 4"
+      fill="none"
+      stroke={c}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   ),
-  close: (c) => <path d="M4 4l8 8M12 4l-8 8" fill="none" stroke={c} strokeWidth="1.4" strokeLinecap="round" />,
+  close: (c) => (
+    <path d="M4 4l8 8M12 4l-8 8" fill="none" stroke={c} strokeWidth="1.4" strokeLinecap="round" />
+  ),
   sun: (c) => (
     <g fill="none" stroke={c} strokeWidth="1.3" strokeLinecap="round">
       <circle cx="8" cy="8" r="3" />

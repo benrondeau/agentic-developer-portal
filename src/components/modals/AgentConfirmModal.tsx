@@ -21,7 +21,13 @@ type AgentConfirmModalProps = {
   onConfirm: () => void
 }
 
-export function AgentConfirmModal({ task, repo, mode = 'launch', onCancel, onConfirm }: AgentConfirmModalProps) {
+export function AgentConfirmModal({
+  task,
+  repo,
+  mode = 'launch',
+  onCancel,
+  onConfirm,
+}: AgentConfirmModalProps) {
   const inTokens = Math.round(task.estTokens * 0.74)
   const outTokens = task.estTokens - inTokens
   const durationLabel =
@@ -59,7 +65,11 @@ export function AgentConfirmModal({ task, repo, mode = 'launch', onCancel, onCon
         <div className="my-2.5 h-px bg-border" />
 
         <div className="mb-3.5 grid grid-cols-3 gap-2.5">
-          <Cell label="Est. tokens" value={`~${formatTokensK(task.estTokens)}`} sub={`in ${formatTokensK(inTokens)} · out ${formatTokensK(outTokens)}`} />
+          <Cell
+            label="Est. tokens"
+            value={`~${formatTokensK(task.estTokens)}`}
+            sub={`in ${formatTokensK(inTokens)} · out ${formatTokensK(outTokens)}`}
+          />
           <Cell label="Est. cost" value={formatCost(task.estCost)} sub="claude-sonnet-4.5" />
           <Cell label="Est. duration" value={durationLabel} sub="p50 from history" />
         </div>

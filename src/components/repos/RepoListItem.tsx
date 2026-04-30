@@ -20,7 +20,9 @@ export function RepoListItem({ repo, active, runningCount }: RepoListItemProps) 
       to={`/repo/${repo.slug}`}
       className={cn(
         'block cursor-pointer border-b border-border-2 px-3.5 py-2.5 transition-colors',
-        active ? 'border-l-[4px] border-l-accent bg-accent' : 'border-l-[4px] border-l-transparent hover:bg-surface-2',
+        active
+          ? 'border-l-[4px] border-l-accent bg-accent'
+          : 'border-l-[4px] border-l-transparent hover:bg-surface-2',
       )}
     >
       <div className="mb-0.5 flex items-center gap-2">
@@ -48,12 +50,7 @@ export function RepoListItem({ repo, active, runningCount }: RepoListItemProps) 
           </span>
         )}
       </div>
-      <div
-        className={cn(
-          'pl-7 font-mono text-[11px]',
-          active ? 'text-surface-2' : 'text-muted',
-        )}
-      >
+      <div className={cn('pl-7 font-mono text-[11px]', active ? 'text-surface-2' : 'text-muted')}>
         {repo.lastPushLabel}
       </div>
     </Link>

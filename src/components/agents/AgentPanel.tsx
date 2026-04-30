@@ -74,8 +74,8 @@ export function AgentPanel({ repoSlug }: { repoSlug: string }) {
         <div className="flex flex-shrink-0 items-center gap-2 border-b border-border bg-surface-2 px-4 py-2 font-mono text-[11px] text-muted">
           <Icon name="warn" size={11} color="var(--c-muted)" />
           <span>
-            agent <span className="font-semibold text-text">{runIdFromUrl}</span> is no longer available
-            on this repo — showing the latest run instead.
+            agent <span className="font-semibold text-text">{runIdFromUrl}</span> is no longer available on
+            this repo — showing the latest run instead.
           </span>
           <button
             type="button"

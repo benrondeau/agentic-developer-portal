@@ -55,7 +55,9 @@ export function AgentToolbar({ run }: { run: AgentRun }) {
         icon={copied ? 'check' : 'copy'}
         onClick={copyLog}
       />
-      {run.status !== 'running' && <Button label="dismiss" small icon="close" onClick={() => dismiss(run.id)} />}
+      {run.status !== 'running' && (
+        <Button label="dismiss" small icon="close" onClick={() => dismiss(run.id)} />
+      )}
     </div>
   )
 }

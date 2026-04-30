@@ -25,9 +25,7 @@ function resolveTask(input: string): Task | null {
 /** Suggestions that start with the typed prefix; capped at 5. */
 function suggest(input: string): Task[] {
   const cmd = normalize(input).toLowerCase()
-  return tasks
-    .filter((t) => t.command.replace(/^\//, '').toLowerCase().startsWith(cmd))
-    .slice(0, 5)
+  return tasks.filter((t) => t.command.replace(/^\//, '').toLowerCase().startsWith(cmd)).slice(0, 5)
 }
 
 export function CommandBar({ repoSlug }: { repoSlug: string }) {

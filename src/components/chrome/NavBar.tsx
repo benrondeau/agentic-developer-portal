@@ -18,9 +18,7 @@ export function NavBar({ agentCount }: NavBarProps) {
 
   return (
     <header className="flex h-11 flex-shrink-0 items-center gap-3.5 border-b border-black/40 bg-nav-bg px-4">
-      <span className="font-mono text-[16px] font-semibold tracking-[-0.02em] text-white">
-        dev-portal
-      </span>
+      <span className="font-mono text-[16px] font-semibold tracking-[-0.02em] text-white">dev-portal</span>
       <span className="text-[20px] text-nav-muted">/</span>
       <button
         type="button"

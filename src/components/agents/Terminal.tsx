@@ -20,8 +20,7 @@ function GlyphFor({ kind }: { kind?: LogKind }) {
 }
 
 // strip leading emoji glyphs that the canned scripts include for legibility.
-const cleanText = (text: string) =>
-  text.replace(/^[←-⇿☀-➿✀-➿⁰-₟‐-⁯]\s?/u, '')
+const cleanText = (text: string) => text.replace(/^[←-⇿☀-➿✀-➿⁰-₟‐-⁯]\s?/u, '')
 
 export function Terminal({ lines }: { lines: LogLine[] }) {
   const scrollRef = useRef<HTMLDivElement>(null)

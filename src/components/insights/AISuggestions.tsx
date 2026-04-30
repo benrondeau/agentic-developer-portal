@@ -41,13 +41,7 @@ function SuggestionRow({ suggestion, repoSlug }: SuggestionRowProps) {
   )
 }
 
-export function AISuggestions({
-  suggestions,
-  repoSlug,
-}: {
-  suggestions: Suggestion[]
-  repoSlug: string
-}) {
+export function AISuggestions({ suggestions, repoSlug }: { suggestions: Suggestion[]; repoSlug: string }) {
   return (
     <div>
       {suggestions.map((s) => (

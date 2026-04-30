@@ -85,10 +85,7 @@ export function OrgDrawer({ onClose }: OrgDrawerProps) {
                     {o.name}
                   </div>
                   <div
-                    className={cn(
-                      'mt-px font-mono text-[11px]',
-                      selected ? 'text-surface-2' : 'text-muted',
-                    )}
+                    className={cn('mt-px font-mono text-[11px]', selected ? 'text-surface-2' : 'text-muted')}
                   >
                     {o.repoCount} repos
                   </div>

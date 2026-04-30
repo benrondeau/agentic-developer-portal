@@ -1,12 +1,4 @@
-import {
-  createContext,
-  useCallback,
-  useEffect,
-  useMemo,
-  useReducer,
-  useRef,
-  type ReactNode,
-} from 'react'
+import { createContext, useCallback, useEffect, useMemo, useReducer, useRef, type ReactNode } from 'react'
 import type { AgentRun, AgentStep, LogLine } from '../types/agent.ts'
 import { tasksById } from '../data/tasks.ts'
 import { templatesByTaskId } from '../data/agentTemplates.ts'
@@ -140,7 +132,12 @@ function reducer(state: State, action: Action): State {
         ),
       }
     case 'dismiss':
-      return { ...state, dismissed: state.dismissed.includes(action.runId) ? state.dismissed : [...state.dismissed, action.runId] }
+      return {
+        ...state,
+        dismissed: state.dismissed.includes(action.runId)
+          ? state.dismissed
+          : [...state.dismissed, action.runId],
+      }
     default:
       return state
   }

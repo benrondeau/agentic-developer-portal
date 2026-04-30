@@ -17,8 +17,7 @@ export function RepoList() {
     return repos.filter((r) => {
       if (q && !r.name.toLowerCase().includes(q)) return false
       if (filter === 'active') return (runningCountByRepo[r.slug] ?? 0) > 0
-      // Mine is a stub for now — pretend the current user owns ts/py repos.
-      if (filter === 'mine') return r.language === 'ts' || r.language === 'py'
+      if (filter === 'attention') return r.warn === true
       return true
     })
   }, [query, filter, runningCountByRepo])

@@ -1,11 +1,11 @@
 import { cn } from '../../utils/cn.ts'
 
-export type RepoFilter = 'all' | 'active' | 'mine'
+export type RepoFilter = 'all' | 'active' | 'attention'
 
 const filters: ReadonlyArray<{ value: RepoFilter; label: string }> = [
   { value: 'all', label: 'All' },
   { value: 'active', label: 'Active' },
-  { value: 'mine', label: 'Mine' },
+  { value: 'attention', label: 'Needs Attention' },
 ]
 
 type RepoFilterChipsProps = {

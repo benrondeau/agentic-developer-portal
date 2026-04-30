@@ -10,12 +10,12 @@ import { Terminal } from './Terminal.tsx'
 import { AgentToolbar } from './AgentToolbar.tsx'
 import { useAgentRuntime } from '../../hooks/useAgentRuntime.ts'
 
-const PANEL_BASE = 'flex flex-1 min-w-0 flex-col bg-surface'
+const PANEL_BASE = 'flex w-[50%] min-w-0 flex-shrink-0 flex-col bg-surface'
 
 export function AgentPanelEmpty({ message }: { message: string }) {
   return (
     <section className={PANEL_BASE}>
-      <div className="flex-shrink-0 border-b border-border px-4 py-2.5 font-mono text-[11px] font-semibold text-text">
+      <div className="flex-shrink-0 border-b border-border px-4 py-2.5 font-mono text-[14px] font-semibold text-text">
         Agent Activity
       </div>
       <EmptyPane
@@ -50,10 +50,10 @@ export function AgentPanel({ repoSlug }: { repoSlug: string }) {
   return (
     <section className={PANEL_BASE}>
       <div className="flex min-w-0 flex-shrink-0 items-center gap-0 overflow-hidden border-b border-border px-3.5">
-        <span className="mr-2 flex-shrink-0 py-3 font-mono text-[11px] font-semibold text-text">
+        <span className="mr-2 flex-shrink-0 py-3 font-mono text-[14px] font-semibold text-text">
           Agent Activity
         </span>
-        <span className="mr-2 flex-shrink-0 py-3 font-mono text-[9px] whitespace-nowrap text-muted">
+        <span className="mr-2 flex-shrink-0 py-3 font-mono text-[11px] whitespace-nowrap text-muted">
           {runningCount} running · {doneCount} done
         </span>
         <AgentTabBar runs={runs} activeId={active.id} onSelect={setUserPickedId} />
@@ -67,7 +67,7 @@ export function AgentPanel({ repoSlug }: { repoSlug: string }) {
       <div className="flex flex-1 overflow-hidden">
         {(viewMode === 'steps' || viewMode === 'split') && (
           <div
-            className={`overflow-y-auto px-3.5 py-2.5 ${viewMode === 'split' ? 'w-[180px] flex-shrink-0 border-r border-border' : 'flex-1'}`}
+            className={`overflow-y-auto px-3.5 py-2.5 ${viewMode === 'split' ? 'w-[260px] flex-shrink-0 border-r border-border' : 'flex-1'}`}
           >
             <StepList steps={active.steps} />
           </div>

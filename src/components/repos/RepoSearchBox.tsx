@@ -30,9 +30,9 @@ export function RepoSearchBox({ value, onChange }: RepoSearchBoxProps) {
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="search repos…"
-        className="min-w-0 flex-1 bg-transparent font-mono text-[11px] text-text placeholder:text-muted focus:outline-none"
+        className="min-w-0 flex-1 bg-transparent font-mono text-[14px] text-text placeholder:text-muted focus:outline-none"
       />
-      <span className="flex-shrink-0 rounded-[3px] border border-border px-1 py-px font-mono text-[9px] leading-none text-muted-2">
+      <span className="flex-shrink-0 rounded-[3px] border border-border px-1 py-px font-mono text-[11px] leading-none text-muted-2">
         ⌘K
       </span>
     </label>

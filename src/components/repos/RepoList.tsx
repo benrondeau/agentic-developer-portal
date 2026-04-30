@@ -24,7 +24,7 @@ export function RepoList() {
   }, [query, filter, runningCountByRepo])
 
   return (
-    <aside className="flex w-[200px] flex-shrink-0 flex-col border-r-[1.5px] border-border bg-surface-2">
+    <aside className="flex w-[20%] flex-shrink-0 flex-col border-r-[1.5px] border-border bg-surface-2">
       <div className="border-b border-border p-3">
         <RepoSearchBox value={query} onChange={setQuery} />
       </div>
@@ -33,7 +33,7 @@ export function RepoList() {
       </div>
       <div className="flex-1 overflow-y-auto">
         {filtered.length === 0 ? (
-          <div className="px-3.5 py-6 font-mono text-[10px] text-muted">no repos match</div>
+          <div className="px-3.5 py-6 font-mono text-[12px] text-muted">no repos match</div>
         ) : (
           filtered.map((r) => (
             <RepoListItem

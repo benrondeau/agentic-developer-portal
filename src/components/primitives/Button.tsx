@@ -32,7 +32,7 @@ export function Button({
       type="button"
       className={cn(
         'inline-flex flex-shrink-0 cursor-pointer items-center gap-1.5 rounded-[4px] border-[1.5px] font-mono whitespace-nowrap select-none transition-colors',
-        small ? 'px-2.5 py-1 text-[10px]' : 'px-4 py-1.5 text-xs',
+        small ? 'px-2.5 py-1 text-[12px]' : 'px-4 py-1.5 text-[15px]',
         variantClasses[variant],
         className,
       )}

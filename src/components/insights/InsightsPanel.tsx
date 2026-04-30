@@ -13,7 +13,7 @@ import type { Repo } from '../../types/repo.ts'
 import { getSuggestionsForRepo } from '../../data/suggestions.ts'
 import { getRecentRunsForRepo } from '../../data/seedRuns.ts'
 
-const PANEL_BASE = 'flex w-[340px] flex-shrink-0 flex-col border-r-[1.5px] border-border bg-surface'
+const PANEL_BASE = 'flex w-[30%] flex-shrink-0 flex-col border-r-[1.5px] border-border bg-surface'
 
 export function InsightsPanelEmpty() {
   return (
@@ -35,7 +35,7 @@ export function InsightsPanel({ repo }: { repo: Repo }) {
     <section className={PANEL_BASE}>
       <RepoHeader repo={repo} />
 
-      <div className="flex-1 overflow-y-auto px-4 py-3">
+      <div className="flex-1 overflow-y-auto px-6 py-5">
         <Label>At a glance</Label>
         <StatGrid stats={repo.stats} />
 

@@ -27,14 +27,14 @@ export function TaskGrid({ repoSlug }: { repoSlug: string }) {
             onMouseEnter={() => setHoveredId(task.id)}
             onMouseLeave={() => setHoveredId(null)}
             className={cn(
-              'flex cursor-pointer flex-col items-center justify-center rounded-[4px] border-[1.5px] px-1.5 py-2.5 text-center transition-colors',
+              'flex cursor-pointer flex-col items-center justify-center rounded-[4px] border-[1.5px] px-2.5 py-3.5 text-center transition-colors',
               isHover ? 'border-accent bg-accent-bg' : 'border-border bg-surface',
             )}
           >
             <div className="mb-1.5 flex h-[18px] items-center justify-center">
               <Icon name={task.icon} size={16} color={isHover ? colorVar[task.color] : 'var(--c-muted)'} />
             </div>
-            <div className={cn('font-mono text-[10px]', isHover ? 'text-accent-text' : 'text-text')}>
+            <div className={cn('font-mono text-[12px]', isHover ? 'text-accent-text' : 'text-text')}>
               {task.label}
             </div>
           </Link>

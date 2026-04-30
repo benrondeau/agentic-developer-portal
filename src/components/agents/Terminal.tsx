@@ -35,7 +35,7 @@ export function Terminal({ lines }: { lines: LogLine[] }) {
   return (
     <div
       ref={scrollRef}
-      className="flex-1 overflow-y-auto rounded-[4px] bg-term-bg px-3 py-2.5 font-mono text-[10px] leading-relaxed text-term-text"
+      className="flex-1 overflow-y-auto rounded-[4px] bg-term-bg px-3 py-2.5 font-mono text-[12px] leading-relaxed text-term-text"
     >
       {lines.map((l, i) => (
         <div key={i} className="flex items-baseline gap-1.5">

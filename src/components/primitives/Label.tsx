@@ -5,7 +5,7 @@ export function Label({ children, className }: { children: ReactNode; className?
   return (
     <div
       className={cn(
-        'mb-1.5 font-mono text-[9px] tracking-[0.08em] text-muted uppercase',
+        'mb-1.5 font-mono text-[11px] tracking-[0.08em] text-muted uppercase',
         className,
       )}
     >

@@ -16,7 +16,7 @@ export function ThemeToggle() {
           style={{ left: isDark ? 16 : 2 }}
         />
       </span>
-      <span className="font-mono text-[10px] text-zinc-400">{isDark ? 'light' : 'dark'}</span>
+      <span className="font-mono text-[12px] text-zinc-400">{isDark ? 'light' : 'dark'}</span>
     </button>
   )
 }

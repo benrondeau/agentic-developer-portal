@@ -24,7 +24,7 @@ export function RepoFilterChips({ value, onChange }: RepoFilterChipsProps) {
             type="button"
             onClick={() => onChange(f.value)}
             className={cn(
-              'flex-shrink-0 cursor-pointer rounded-[3px] border px-1.5 py-px font-mono text-[10px] whitespace-nowrap',
+              'flex-shrink-0 cursor-pointer rounded-[3px] border px-1.5 py-px font-mono text-[12px] whitespace-nowrap',
               selected
                 ? 'border-transparent bg-accent text-white'
                 : 'border-border bg-transparent text-muted hover:text-text',

@@ -19,7 +19,7 @@ type SuggestionRowProps = {
 
 function SuggestionRow({ suggestion, repoSlug }: SuggestionRowProps) {
   return (
-    <div className="mb-1.5 flex items-center gap-2 rounded-[4px] border-[1.5px] border-border bg-surface-2 px-2.5 py-1.5">
+    <div className="mb-2 flex items-center gap-2.5 rounded-[4px] border-[1.5px] border-border bg-surface-2 px-3.5 py-2.5">
       <span className="inline-flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-[4px] border border-border bg-surface">
         <Icon
           name={suggestion.icon}
@@ -28,11 +28,11 @@ function SuggestionRow({ suggestion, repoSlug }: SuggestionRowProps) {
           className={colorClassMap[suggestion.color]}
         />
       </span>
-      <span className="flex-1 font-mono text-[11px] text-text">{suggestion.text}</span>
+      <span className="flex-1 font-mono text-[14px] text-text">{suggestion.text}</span>
       <Link
         to={`/repo/${repoSlug}?launch=${suggestion.taskId}`}
         className={cn(
-          'inline-flex flex-shrink-0 cursor-pointer items-center gap-1.5 rounded-[4px] border-[1.5px] border-border bg-surface px-2.5 py-1 font-mono text-[10px] text-text whitespace-nowrap hover:border-accent',
+          'inline-flex flex-shrink-0 cursor-pointer items-center gap-1.5 rounded-[4px] border-[1.5px] border-border bg-surface px-3 py-1.5 font-mono text-[12px] text-text whitespace-nowrap hover:border-accent',
         )}
       >
         {suggestion.cta}

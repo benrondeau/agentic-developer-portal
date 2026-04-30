@@ -58,8 +58,8 @@
   --c-purple-bg: #f5e6ff;
   --c-nav-bg: #24292e;
   --c-nav-muted: #586069;
-  --c-term-bg: #1e1e1e;
-  --c-term-text: #d4d4d4;
+  --c-term-bg: #f6f8fa;
+  --c-term-text: #24292e;
 }
 
 [data-theme='dark'] {
@@ -101,7 +101,7 @@
     background: var(--c-bg);
     color: var(--c-text);
     font-family: var(--font-mono);
-    font-size: 13px;
+    font-size: 16px;
     line-height: 1.45;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;

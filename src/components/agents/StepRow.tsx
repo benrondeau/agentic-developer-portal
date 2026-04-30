@@ -26,13 +26,13 @@ export function StepRow({ step }: { step: AgentStep }) {
       <div className="min-w-0 flex-1">
         <div
           className={cn(
-            'font-mono text-[10px]',
+            'font-mono text-[12px]',
             step.status === 'pending' ? 'text-muted' : 'text-text',
           )}
         >
           {step.label}
         </div>
-        {step.detail && <div className="mt-px font-mono text-[9px] text-muted">{step.detail}</div>}
+        {step.detail && <div className="mt-px font-mono text-[11px] text-muted">{step.detail}</div>}
       </div>
     </div>
   )

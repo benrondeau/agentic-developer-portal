@@ -31,10 +31,10 @@ export function AgentMeta({ run }: { run: AgentRun }) {
             isLive ? 'animate-pulse-soft bg-green' : run.status === 'error' ? 'bg-red' : 'bg-muted',
           )}
         />
-        <span className="font-mono text-[11px] font-medium text-text">{run.label}</span>
-        <span className="ml-auto font-mono text-[10px] text-muted">{elapsedLabel}</span>
+        <span className="font-mono text-[14px] font-medium text-text">{run.label}</span>
+        <span className="ml-auto font-mono text-[12px] text-muted">{elapsedLabel}</span>
       </div>
-      <div className="mb-1 flex justify-between font-mono text-[9px] text-muted">
+      <div className="mb-1 flex justify-between font-mono text-[11px] text-muted">
         <span>progress</span>
         <span>{Math.round(run.pct)}%</span>
       </div>
@@ -80,15 +80,15 @@ function MetaCell({
 }) {
   return (
     <div>
-      <div className="mb-0.5 flex items-center gap-1.5 font-mono text-[8px] tracking-[0.06em] text-muted uppercase">
+      <div className="mb-0.5 flex items-center gap-1.5 font-mono text-[10px] tracking-[0.06em] text-muted uppercase">
         {label}
         {live && <span className="h-1 w-1 animate-pulse-soft rounded-full bg-accent" />}
       </div>
-      <div className="font-mono text-xs font-semibold text-text">
+      <div className="font-mono text-[15px] font-semibold text-text">
         {value}
-        {suffix && <span className="text-[9px] font-normal text-muted">{suffix}</span>}
+        {suffix && <span className="text-[11px] font-normal text-muted">{suffix}</span>}
       </div>
-      <div className="mt-px font-mono text-[8px] text-muted">{subtext}</div>
+      <div className="mt-px font-mono text-[10px] text-muted">{subtext}</div>
     </div>
   )
 }

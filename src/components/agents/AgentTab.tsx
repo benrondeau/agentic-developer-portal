@@ -21,7 +21,7 @@ export function AgentTab({ label, status, active, onClick }: AgentTabProps) {
       type="button"
       onClick={onClick}
       className={cn(
-        'flex flex-shrink-0 cursor-pointer items-center gap-1.5 px-3.5 py-1.5 font-mono text-[10px] whitespace-nowrap select-none',
+        'flex flex-shrink-0 cursor-pointer items-center gap-1.5 px-3.5 py-1.5 font-mono text-[12px] whitespace-nowrap select-none',
         'border-b-2',
         active ? 'border-accent bg-accent-bg text-accent-text' : 'border-transparent bg-transparent text-muted hover:text-text',
       )}

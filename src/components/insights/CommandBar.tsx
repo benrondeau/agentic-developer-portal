@@ -15,17 +15,17 @@ export function CommandBar({ repoSlug }: { repoSlug: string }) {
   }
 
   return (
-    <div className="flex-shrink-0 border-t border-border px-4 py-2.5">
-      <div className="mb-1 font-mono text-[9px] tracking-[0.06em] text-muted uppercase">
+    <div className="flex-shrink-0 border-t border-border px-6 py-4">
+      <div className="mb-1 font-mono text-[11px] tracking-[0.06em] text-muted uppercase">
         Run a Command on Repo
       </div>
       <div className="flex items-center gap-1.5 overflow-hidden rounded-[4px] border-[1.5px] border-border bg-surface-2">
-        <span className="flex-shrink-0 pl-2.5 font-mono text-[13px] font-semibold text-muted">/</span>
-        <span className="flex-1 py-2 pr-1.5 font-mono text-[11px] text-muted-2">{SAMPLE_COMMAND}</span>
+        <span className="flex-shrink-0 pl-2.5 font-mono text-[16px] font-semibold text-muted">/</span>
+        <span className="flex-1 py-2 pr-1.5 font-mono text-[14px] text-muted-2">{SAMPLE_COMMAND}</span>
         <button
           type="button"
           onClick={run}
-          className="inline-flex flex-shrink-0 cursor-pointer items-center gap-1.5 bg-accent px-3 py-2 font-mono text-[10px] whitespace-nowrap text-white hover:opacity-90"
+          className="inline-flex flex-shrink-0 cursor-pointer items-center gap-1.5 bg-accent px-3 py-2 font-mono text-[12px] whitespace-nowrap text-white hover:opacity-90"
         >
           <Icon name="play" size={10} color="white" />
           run

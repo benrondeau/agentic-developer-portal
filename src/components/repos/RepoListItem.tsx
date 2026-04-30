@@ -27,7 +27,7 @@ export function RepoListItem({ repo, active, runningCount }: RepoListItemProps) 
         <LanguageIcon tag={repo.language} />
         <span
           className={cn(
-            'flex-1 overflow-hidden font-mono text-[11px] text-ellipsis whitespace-nowrap',
+            'flex-1 overflow-hidden font-mono text-[14px] text-ellipsis whitespace-nowrap',
             active ? 'font-semibold text-surface' : 'text-text',
           )}
         >
@@ -50,7 +50,7 @@ export function RepoListItem({ repo, active, runningCount }: RepoListItemProps) 
       </div>
       <div
         className={cn(
-          'pl-7 font-mono text-[9px]',
+          'pl-7 font-mono text-[11px]',
           active ? 'text-surface-2' : 'text-muted',
         )}
       >

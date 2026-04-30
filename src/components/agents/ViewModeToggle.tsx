@@ -24,7 +24,7 @@ export function ViewModeToggle({ value, onChange }: ViewModeToggleProps) {
             type="button"
             onClick={() => onChange(opt.value)}
             className={cn(
-              'cursor-pointer rounded-[3px] border px-2 py-1 font-mono text-[9px]',
+              'cursor-pointer rounded-[3px] border px-2 py-1 font-mono text-[11px]',
               selected
                 ? 'border-accent bg-accent-bg text-accent-text'
                 : 'border-border bg-transparent text-muted hover:text-text',

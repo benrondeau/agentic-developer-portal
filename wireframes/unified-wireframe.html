@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>State 1b — Org switcher drawer</title>
+<title>Agentic Developer Portal — Unified Wireframe</title>
 <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
@@ -1041,7 +1041,7 @@ const Dashboard = ({repoSelected, multiAgent, dark, onToggleDark, agentCount=0, 
   const [confirmOpen, setConfirmOpen] = React.useState(showConfirm);
 
   return (
-    <div style={{width:1024, height:700, display:'flex', flexDirection:'column', background:t.bg, ...fc, overflow:'hidden', position:'relative'}}>
+    <div style={{width:'100%', height:'100%', display:'flex', flexDirection:'column', background:t.bg, ...fc, overflow:'hidden', position:'relative'}}>
       <NavBar dark={dark} onToggle={onToggleDark} t={t}
         agentCount={agentCount}
         onAgentBadgeClick={()=>setDrawerOpen(true)}
@@ -1061,18 +1061,57 @@ const Dashboard = ({repoSelected, multiAgent, dark, onToggleDark, agentCount=0, 
 
 /* ── root ── */
 function App() {
+  const STATES = [
+    {id:'empty',     name:'1: Empty',          repoSelected:false, multiAgent:false},
+    {id:'orgdrawer', name:'1b: Org drawer',    repoSelected:false, multiAgent:false, showOrgDrawer:true},
+    {id:'repo',      name:'2: Repo selected',  repoSelected:true,  multiAgent:false},
+    {id:'agents',    name:'3: Agents running', repoSelected:true,  multiAgent:true},
+    {id:'confirm',   name:'3b: Confirm modal', repoSelected:true,  multiAgent:true, showConfirm:true},
+    {id:'drawer',    name:'4: Global drawer',  repoSelected:true,  multiAgent:true, showDrawer:true},
+  ];
+  const [stateIdx, setStateIdx] = React.useState(0);
   const [dark, setDark] = React.useState(false);
+  const t = T(dark);
+  const s = STATES[stateIdx];
+
+  React.useEffect(() => {
+    document.body.style.background = dark ? '#0a0a0a' : '#e8e8ee';
+  }, [dark]);
+
   return (
     <div style={{
-      width:'100vw', height:'100vh', display:'flex',
-      alignItems:'center', justifyContent:'center',
-      background: dark ? '#0a0a0a' : '#e8e8ee', overflow:'auto', padding:20,
+      width:'100vw', height:'100vh', display:'flex', flexDirection:'column',
+      overflow:'hidden', background:t.bg,
     }}>
+      {/* state switcher rail */}
       <div style={{
-        boxShadow:'0 4px 24px rgba(0,0,0,0.12)',
-        border:'1px solid ' + (dark ? '#222' : '#d0d0d8'),
+        display:'flex', alignItems:'center', gap:6, padding:'6px 12px',
+        background:t.surface2, borderBottom:`1px solid ${t.border}`, flexShrink:0,
+        ...fc,
       }}>
-        <Dashboard repoSelected={false} multiAgent={false} agentCount={12} showOrgDrawer={true} dark={dark} onToggleDark={() => setDark(d=>!d)} />
+        <span style={{fontSize:9, fontWeight:600, color:t.muted, letterSpacing:'0.08em', textTransform:'uppercase', marginRight:4}}>Demo state</span>
+        {STATES.map((st,i) => (
+          <div key={st.id} onClick={()=>setStateIdx(i)} style={{
+            fontSize:10, fontWeight:500, padding:'4px 10px', cursor:'pointer',
+            border:`1px solid ${stateIdx===i?t.accent:t.border}`, borderRadius:3,
+            background: stateIdx===i?t.accent:t.surface,
+            color: stateIdx===i ? (dark?'#000':'#fff') : t.text,
+          }}>{st.name}</div>
+        ))}
+      </div>
+
+      <div style={{flex:1, overflow:'hidden', display:'flex'}}>
+        <Dashboard
+          key={s.id}
+          repoSelected={s.repoSelected}
+          multiAgent={s.multiAgent}
+          agentCount={12}
+          showDrawer={!!s.showDrawer}
+          showOrgDrawer={!!s.showOrgDrawer}
+          showConfirm={!!s.showConfirm}
+          dark={dark}
+          onToggleDark={() => setDark(d=>!d)}
+        />
       </div>
     </div>
   );

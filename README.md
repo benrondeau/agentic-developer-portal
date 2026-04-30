@@ -4,7 +4,7 @@
 
 **Wireframes + UX Explanation:** https://github.com/benrondeau/agentic-developer-portal/tree/main/wireframes
 
-## UX Overview
+## Overview
 
 The user interface is comprised of the following elements:
 

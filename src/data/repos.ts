@@ -1,4 +1,4 @@
-import type { Repo } from '../types/repo.ts'
+import type { Repo, RepoStat } from '../types/repo.ts'
 
 export const repos: Repo[] = [
   {
@@ -278,4 +278,95 @@ export const reposBySlug = new Map(repos.map((r) => [r.slug, r]))
 
 export function getRepoBySlug(slug: string): Repo | undefined {
   return reposBySlug.get(slug)
+}
+
+// ── per-branch view derivation ─────────────────────────────────────────────
+// Each non-default branch projects a "personality" onto the repo's headline
+// numbers so switching branches in the dropdown produces visibly different
+// data. Top-level repo fields (name/description/stack/contributing/getting
+// started) remain branch-agnostic — they're repo-level metadata.
+
+type BranchProfile = {
+  lastPushLabel: string
+  fileMul: number
+  /** scaled multipliers + absolute deltas applied to numeric stats. */
+  prMul: number
+  issueMul: number
+  coverageDelta: number
+  depIssueDelta: number
+  ciDelta: number
+  alwaysWarn?: boolean
+}
+
+function branchProfile(branch: string): BranchProfile | null {
+  if (branch === 'develop') {
+    return { lastPushLabel: '15m ago', fileMul: 1.02, prMul: 1.6, issueMul: 1.1, coverageDelta: -3, depIssueDelta: 1, ciDelta: -0.5 }
+  }
+  if (branch.startsWith('release/')) {
+    return { lastPushLabel: '5d ago', fileMul: 1.0, prMul: 0.2, issueMul: 0.7, coverageDelta: 4, depIssueDelta: -1, ciDelta: 0.4 }
+  }
+  if (branch.startsWith('feat/')) {
+    return { lastPushLabel: '38m ago', fileMul: 1.05, prMul: 0.4, issueMul: 1.0, coverageDelta: -8, depIssueDelta: 0, ciDelta: -1.5 }
+  }
+  if (branch.startsWith('hotfix/')) {
+    return { lastPushLabel: '6m ago', fileMul: 1.0, prMul: 0.1, issueMul: 0.6, coverageDelta: 0, depIssueDelta: -2, ciDelta: -0.2, alwaysWarn: true }
+  }
+  return null
+}
+
+function transformStat(stat: RepoStat, p: BranchProfile): RepoStat {
+  switch (stat.label.toLowerCase()) {
+    case 'open prs': return scaleIntStat(stat, p.prMul)
+    case 'open issues': return scaleIntStat(stat, p.issueMul, /* warnIfAbove */ 30)
+    case 'test coverage': return shiftPctStat(stat, p.coverageDelta, /* warnIfBelow */ 75)
+    case 'dep issues': return shiftIntStat(stat, p.depIssueDelta, /* warnIfAbove */ 4)
+    case 'ci pass rate': return shiftPctStat(stat, p.ciDelta, /* warnIfBelow */ 95)
+    default: return stat
+  }
+}
+
+function scaleIntStat(stat: RepoStat, mul: number, warnIfAbove?: number): RepoStat {
+  const n = Number.parseInt(stat.value, 10)
+  if (Number.isNaN(n)) return stat
+  const next = Math.max(0, Math.round(n * mul))
+  const warn = warnIfAbove != null ? next > warnIfAbove : false
+  return { ...stat, value: String(next), warn: warn || stat.warn }
+}
+
+function shiftIntStat(stat: RepoStat, delta: number, warnIfAbove: number): RepoStat {
+  const n = Number.parseInt(stat.value, 10)
+  if (Number.isNaN(n)) return stat
+  const next = Math.max(0, n + delta)
+  return { ...stat, value: String(next), warn: next > warnIfAbove }
+}
+
+function shiftPctStat(stat: RepoStat, delta: number, warnIfBelow: number): RepoStat {
+  const m = stat.value.match(/^(\d+(?:\.\d+)?)%$/)
+  if (!m) return stat
+  const raw = m[1]
+  const n = Number.parseFloat(raw)
+  const next = Math.max(0, Math.min(100, Math.round((n + delta) * 10) / 10))
+  const formatted = raw.includes('.') ? `${next.toFixed(1)}%` : `${Math.round(next)}%`
+  return { ...stat, value: formatted, warn: next < warnIfBelow }
+}
+
+/**
+ * Project a per-branch view of `repo`. Top-level repo fields are treated as
+ * the default-branch's data; other branches transform via `branchProfile`.
+ * Falls back to `repo` unchanged when `branch` is the repo's default or
+ * unknown.
+ */
+export function getRepoForBranch(repo: Repo, branch: string): Repo {
+  if (branch === repo.branch) return repo
+  if (!repo.branches.includes(branch)) return repo
+  const profile = branchProfile(branch)
+  if (!profile) return { ...repo, branch }
+  return {
+    ...repo,
+    branch,
+    lastPushLabel: profile.lastPushLabel,
+    fileCount: Math.max(50, Math.round(repo.fileCount * profile.fileMul)),
+    stats: repo.stats.map((s) => transformStat(s, profile)),
+    warn: profile.alwaysWarn ? true : repo.warn,
+  }
 }

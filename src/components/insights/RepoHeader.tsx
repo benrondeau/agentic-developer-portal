@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useSearchParams } from 'react-router'
 import { LanguageIcon } from '../repos/LanguageIcon.tsx'
 import { Icon } from '../primitives/Icon.tsx'
 import type { Repo } from '../../types/repo.ts'
@@ -10,9 +11,7 @@ export function RepoHeader({ repo }: { repo: Repo }) {
       <div className="mb-1 flex items-center gap-2">
         <LanguageIcon tag={repo.language} />
         <span className="font-mono text-[16px] font-semibold text-text">{repo.name}</span>
-        {/* keying on slug remounts the dropdown when the user switches repos
-            so its local selection resets without touching refs during render. */}
-        <BranchDropdown key={repo.slug} repo={repo} />
+        <BranchDropdown repo={repo} />
       </div>
       <div className="pl-[22px] font-mono text-[12px] text-muted">
         {repo.languageLabel} · {repo.fileCount.toLocaleString()} files · last push {repo.lastPushLabel}
@@ -22,9 +21,26 @@ export function RepoHeader({ repo }: { repo: Repo }) {
 }
 
 function BranchDropdown({ repo }: { repo: Repo }) {
-  const [selected, setSelected] = useState(repo.branch)
+  // The active branch lives in the URL as `?branch=<name>`. RepoView reads
+  // the same param to derive per-branch data, so writing here updates the
+  // entire repo view in one place.
+  const [searchParams, setSearchParams] = useSearchParams()
+  const selected = searchParams.get('branch') ?? repo.branch
   const [open, setOpen] = useState(false)
   const wrapRef = useRef<HTMLDivElement>(null)
+
+  const selectBranch = (branch: string) => {
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev)
+        if (branch === repo.branch) next.delete('branch')
+        else next.set('branch', branch)
+        return next
+      },
+      { replace: true },
+    )
+    setOpen(false)
+  }
 
   useEffect(() => {
     if (!open) return
@@ -70,10 +86,7 @@ function BranchDropdown({ repo }: { repo: Repo }) {
                   type="button"
                   role="option"
                   aria-selected={isSelected}
-                  onClick={() => {
-                    setSelected(b)
-                    setOpen(false)
-                  }}
+                  onClick={() => selectBranch(b)}
                   className={cn(
                     'flex w-full cursor-pointer items-center gap-2 px-3 py-1.5 text-left font-mono text-[12px] hover:bg-surface-2',
                     isSelected ? 'text-accent-text' : 'text-text',

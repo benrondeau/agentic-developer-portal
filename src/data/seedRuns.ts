@@ -146,7 +146,42 @@ const recentDefault: RecentRun[] = [
   { label: 'run-tests-agent', status: 'done', elapsed: '6h ago', detail: 'all green' },
 ]
 
-export function getRecentRunsForRepo(slug: string): RecentRun[] {
+// Branch-flavored recent runs. Non-default branches replace the per-repo
+// list so the "Recent Agent Runs" section reflects what's been run on this
+// branch specifically.
+const recentDevelop: RecentRun[] = [
+  { label: 'run-tests-agent', status: 'done', elapsed: '8m ago', detail: 'all green on develop' },
+  { label: 'refactor-agent', status: 'done', elapsed: '2h ago', detail: 'cleanup PR #312 opened' },
+  { label: 'dep-upgrade-agent', status: 'error', elapsed: '5h ago', detail: 'failed: lockfile conflict' },
+]
+
+const recentRelease: RecentRun[] = [
+  { label: 'sec-scan-agent', status: 'done', elapsed: '4h ago', detail: 'no high-severity findings' },
+  { label: 'run-tests-agent', status: 'done', elapsed: '5h ago', detail: 'full regression: green' },
+]
+
+const recentFeat: RecentRun[] = [
+  { label: 'refactor-agent', status: 'done', elapsed: '20m ago', detail: 'iteration #4 · WIP' },
+  { label: 'run-tests-agent', status: 'error', elapsed: '1h ago', detail: '3 new tests failing' },
+]
+
+const recentHotfix: RecentRun[] = [
+  { label: 'sec-scan-agent', status: 'done', elapsed: '3m ago', detail: 'CVE patched · clean scan' },
+  { label: 'run-tests-agent', status: 'done', elapsed: '8m ago', detail: '12 critical-path tests green' },
+]
+
+function recentForBranch(branch: string | undefined): RecentRun[] | null {
+  if (!branch || branch === 'main') return null
+  if (branch === 'develop') return recentDevelop
+  if (branch.startsWith('release/')) return recentRelease
+  if (branch.startsWith('feat/')) return recentFeat
+  if (branch.startsWith('hotfix/')) return recentHotfix
+  return null
+}
+
+export function getRecentRunsForRepo(slug: string, branch?: string): RecentRun[] {
+  const branched = recentForBranch(branch)
+  if (branched) return branched
   if (slug === 'backend-api') return recentBackend
   if (slug === 'frontend-v3') return recentFrontend
   return recentDefault

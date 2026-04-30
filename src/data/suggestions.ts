@@ -66,6 +66,56 @@ const perRepo: Record<string, Suggestion[]> = {
   ],
 }
 
-export function getSuggestionsForRepo(slug: string): Suggestion[] {
-  return perRepo[slug] ?? defaultSuggestions
+// Per-branch suggestion shown ahead of the repo-level ones. Demonstrates
+// that the "AI Suggestions" panel is sensitive to which branch the user has
+// checked out, not just which repo.
+function branchSuggestion(branch: string): Suggestion | null {
+  if (branch.startsWith('hotfix/')) {
+    return {
+      id: 'sug-branch-hotfix',
+      icon: 'security',
+      text: 'hotfix ready — open PR to main and request expedited review',
+      cta: 'Open PR',
+      color: 'red',
+      taskId: 'create-pr',
+    }
+  }
+  if (branch.startsWith('release/')) {
+    return {
+      id: 'sug-branch-release',
+      icon: 'beaker',
+      text: 'release branch — run full regression before tagging',
+      cta: 'Run Tests',
+      color: 'orange',
+      taskId: 'run-tests',
+    }
+  }
+  if (branch.startsWith('feat/')) {
+    return {
+      id: 'sug-branch-feat',
+      icon: 'refactor',
+      text: 'feature branch is 14 commits behind main',
+      cta: 'Refactor',
+      color: 'orange',
+      taskId: 'refactor',
+    }
+  }
+  if (branch === 'develop') {
+    return {
+      id: 'sug-branch-develop',
+      icon: 'package',
+      text: '7 commits ready to cherry-pick into the next release',
+      cta: 'Open PR',
+      color: 'accent',
+      taskId: 'create-pr',
+    }
+  }
+  return null
+}
+
+export function getSuggestionsForRepo(slug: string, branch?: string): Suggestion[] {
+  const base = perRepo[slug] ?? defaultSuggestions
+  if (!branch || branch === 'main') return base
+  const head = branchSuggestion(branch)
+  return head ? [head, ...base.slice(0, 2)] : base
 }

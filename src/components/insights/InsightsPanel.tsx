@@ -28,8 +28,8 @@ export function InsightsPanelEmpty() {
 }
 
 export function InsightsPanel({ repo }: { repo: Repo }) {
-  const suggestions = getSuggestionsForRepo(repo.slug)
-  const recent = getRecentRunsForRepo(repo.slug)
+  const suggestions = getSuggestionsForRepo(repo.slug, repo.branch)
+  const recent = getRecentRunsForRepo(repo.slug, repo.branch)
 
   return (
     <section className={PANEL_BASE}>

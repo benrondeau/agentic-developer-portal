@@ -50,7 +50,7 @@ The right pane shows live and recent runs for the **current repo** as tabs.
   - `running` → **abort** (immediate, marks the run aborted)
   - `done` with a PR result → **view PR #N**
   - `done` with a report result → **view report** (opens the report viewer modal)
-  - `error` → **re-run agent** (opens the confirmation modal in retry mode), **edit & retry**
+  - `error` → **re-run agent** (opens the confirmation modal in retry mode)
   - all states → **copy log** (button flips to "copied!" with a check icon for ~1.5 s on success)
   - non-running → **dismiss** (hides the run from the tab bar but preserves history)
 

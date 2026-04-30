@@ -21,7 +21,7 @@ export function OrgDrawer({ onClose }: OrgDrawerProps) {
   return (
     <DrawerShell side="left" width={300} onClose={onClose}>
       <div className="flex flex-shrink-0 items-center gap-2 border-b border-border bg-nav-bg px-4 py-3">
-        <span className="flex-1 font-mono text-[15px] font-semibold text-white">Switch Organisation</span>
+        <span className="flex-1 font-mono text-[15px] font-semibold text-white">Switch Organization</span>
         <button
           type="button"
           onClick={onClose}
@@ -39,7 +39,7 @@ export function OrgDrawer({ onClose }: OrgDrawerProps) {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="search organisations…"
+            placeholder="search organizations…"
             autoFocus
             className="min-w-0 flex-1 bg-transparent font-mono text-[14px] text-text placeholder:text-muted focus:outline-none"
           />
@@ -48,10 +48,10 @@ export function OrgDrawer({ onClose }: OrgDrawerProps) {
 
       <div className="flex-1 overflow-y-auto">
         <div className="px-3 pt-1.5 pb-1 font-mono text-[11px] tracking-[0.08em] text-muted uppercase">
-          Your Organisations
+          Your Organizations
         </div>
         {filtered.length === 0 ? (
-          <div className="px-4 py-6 font-mono text-[12px] text-muted">no organisations match</div>
+          <div className="px-4 py-6 font-mono text-[12px] text-muted">no organizations match</div>
         ) : (
           filtered.map((o) => {
             const selected = selectedSlug === o.slug
